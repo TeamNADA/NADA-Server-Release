@@ -12,8 +12,10 @@ phases:
       - pwd
 artifacts:
   files:
-    - '*'
-
+    - build/libs/*.jar
+    - appspec.yml   # CodeDeploy 적용 시 추가
+    - scripts/**    # CodeDeploy 적용 시 추가
+  discard-paths: yes
 cache:
   paths:
     - '/root/.gradle/caches/**/*'

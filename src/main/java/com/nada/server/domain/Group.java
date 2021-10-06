@@ -5,6 +5,7 @@ import static javax.persistence.FetchType.LAZY;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,8 +31,7 @@ public class Group {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "card")
-    private List<Card> cards = new ArrayList<>();
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    private List<CardGroup> cardGroups = new ArrayList<>();
 
 }

@@ -16,11 +16,11 @@ public class User {
     private String id;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "card")
+    @OneToMany(mappedBy = "user")
     private List<Card> cards = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "user")
     private List<Card> groups = new ArrayList<>();
 }
 

@@ -17,7 +17,7 @@ public class CardGroup {
 
     @Id @GeneratedValue
     @Column(name = "card_group_id")
-    private int id;
+    private Long id;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")

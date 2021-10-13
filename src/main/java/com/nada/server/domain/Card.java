@@ -57,8 +57,4 @@ public class Card {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
-    private List<CardGroup> cardGroups = new ArrayList<>();
-
-
 }

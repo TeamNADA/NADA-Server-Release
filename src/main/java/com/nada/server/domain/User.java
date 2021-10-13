@@ -14,13 +14,5 @@ public class User {
     @Id
     @Column(name = "user_id")
     private String id;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    private List<Card> cards = new ArrayList<>();
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    private List<Card> groups = new ArrayList<>();
 }
 

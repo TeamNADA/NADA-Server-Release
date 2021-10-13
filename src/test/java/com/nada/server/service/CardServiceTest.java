@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.nada.server.domain.Card;
 import com.nada.server.repository.CardRepository;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -60,7 +61,7 @@ class CardServiceTest {
 
         Card card = new Card();
         card.setId("cardA");
-        String cardId = cardService.create(card, userId);
+        cardService.create(card, userId);
 
         //when
         Card findCard = cardService.findOne("cardA");
@@ -84,5 +85,25 @@ class CardServiceTest {
 
         //then
         assertThat(e.getMessage()).isEqualTo("존재하지 않는 카드입니다.");
+    }
+
+    @Test
+    public void 작성한_카드_조회() throws Exception{
+        //given
+        String userId = userService.login("userA");
+
+        Card card1 = new Card();
+        card1.setId("cardA");
+        cardService.create(card1, userId);
+
+        Card card2 = new Card();
+        card2.setId("cardB");
+        cardService.create(card2, userId);
+
+        //when
+        List<Card> findCards = cardService.findCards(userId);
+
+        //then
+        assertThat(findCards.size()).isEqualTo(2);
     }
 }

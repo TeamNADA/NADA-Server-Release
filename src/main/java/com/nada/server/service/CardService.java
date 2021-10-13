@@ -4,6 +4,7 @@ import com.nada.server.domain.Card;
 import com.nada.server.domain.User;
 import com.nada.server.repository.CardRepository;
 import com.nada.server.repository.UserRepository;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -49,5 +50,12 @@ public class CardService {
         }else{
             throw new IllegalStateException("존재하지 않는 카드입니다.");
         }
+    }
+
+    /**
+     * 유저가 작성한 카드 목록 조회
+     */
+    public List<Card> findCards(String userId){
+        return cardRepository.findByUserId(userId);
     }
 }

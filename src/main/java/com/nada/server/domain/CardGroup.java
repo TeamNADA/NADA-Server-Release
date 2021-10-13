@@ -20,6 +20,10 @@ public class CardGroup {
     private int id;
 
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "group_id")
     private Group group;
 

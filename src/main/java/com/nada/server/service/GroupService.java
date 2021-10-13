@@ -1,5 +1,6 @@
 package com.nada.server.service;
 
+import com.nada.server.domain.Card;
 import com.nada.server.domain.Group;
 import com.nada.server.domain.User;
 import com.nada.server.repository.GroupRepository;
@@ -57,6 +58,13 @@ public class GroupService {
     public void changeName(Long groupId, String groupName){
         Group findGroup = groupRepository.findById(groupId).get();
         findGroup.setName(groupName);
+    }
+
+    /**
+     * 유저가 추가한 그룹 목록 조회
+     */
+    public List<Group> findGroups(String userId){
+        return groupRepository.findByUserId(userId);
     }
 
 }

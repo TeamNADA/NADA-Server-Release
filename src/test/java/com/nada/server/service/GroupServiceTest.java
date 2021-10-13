@@ -5,11 +5,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.nada.server.domain.Group;
 import com.nada.server.repository.GroupRepository;
-import org.assertj.core.api.Assertions;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -89,6 +88,27 @@ class GroupServiceTest {
 
         //then
         assertThat(groupRepository.findById(groupId).isEmpty()).isEqualTo(true);
+    }
+
+    @Test
+    public void 추가한_그룹_조회() throws Exception {
+        //given
+        String userId = userService.login("userA");
+
+        Group group1 = new Group();
+        group1.setName("groupA");
+
+        Group group2 = new Group();
+        group2.setName("groupB");
+
+        groupService.create(group1, userId);
+        groupService.create(group2, userId);
+
+        //when
+        List<Group> findGroups = groupService.findGroups(userId);
+
+        //then
+        assertThat(findGroups.size()).isEqualTo(2);
     }
 
 }

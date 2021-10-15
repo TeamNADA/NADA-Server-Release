@@ -45,15 +45,11 @@ public class CardService {
      * 카드 검색
      * 없다면 에러 발생
      */
-    public CardFrontDTO findOne(String cardId){
+    public Card findOne(String cardId){
         Optional<Card> findCard = cardRepository.findById(cardId);
 
         if(findCard.isPresent()){
-            Card c = findCard.get();
-            return new CardFrontDTO(c.getId(), c.getBackground(),
-                c.getTitle(), c.getName(), c.getBirthDate(), c.getAge(), c.getMbti(),
-                c.getInstagram(), c.getLinkName(), c.getLink(), c.getDescription());
-
+            return findCard.get();
         }else{
             throw new IllegalStateException("존재하지 않는 카드입니다.");
         }
@@ -63,6 +59,6 @@ public class CardService {
      * 유저가 작성한 카드 목록 조회
      */
     public List<Card> findCards(String userId){
-        return cardRepository.findByUserId(userId);
+        return cardRepository.findByUserIdOrderByPriorityAsc(userId);
     }
 }

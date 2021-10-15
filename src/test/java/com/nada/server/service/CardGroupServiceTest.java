@@ -125,7 +125,7 @@ class CardGroupServiceTest {
         cardGroupService.add(card2Id, groupId, userId);
 
         //when
-        List<CardFrontDTO> findCards = cardGroupService.findCardsByGroup(groupId);
+        List<Card> findCards = cardGroupService.findCardsByGroup(groupId);
 
         //then
         assertThat(findCards.size()).isEqualTo(2);
@@ -156,7 +156,7 @@ class CardGroupServiceTest {
         cardGroupService.deleteCardFromGroup(card1Id, groupId);
 
         //then
-        List<CardFrontDTO> findCards = cardGroupService.findCardsByGroup(groupId);
+        List<Card> findCards = cardGroupService.findCardsByGroup(groupId);
         assertThat(findCards.size()).isEqualTo(1);
 
     }

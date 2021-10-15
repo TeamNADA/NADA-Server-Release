@@ -90,7 +90,7 @@ public class CardGroupService {
     /**
      * 그룹에 포함된 카드 목록 조회
      */
-    public List<CardFrontDTO> findCardsByGroup(Long groupId){
+    public List<Card> findCardsByGroup(Long groupId){
         Group findGroup = groupRepository.findById(groupId).get();
         return cardGroupSupportRepository.findCardsByGroup(findGroup);
     }

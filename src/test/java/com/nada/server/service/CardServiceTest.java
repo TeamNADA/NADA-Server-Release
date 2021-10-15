@@ -5,13 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.nada.server.domain.Card;
-import com.nada.server.dto.CardFrontDTO;
 import com.nada.server.repository.CardRepository;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -66,10 +64,10 @@ class CardServiceTest {
         cardService.create(card, userId);
 
         //when
-        CardFrontDTO findCard = cardService.findOne("cardA");
+        Card findCard = cardService.findOne("cardA");
 
         //then
-        assertThat(findCard.getCardId()).isEqualTo("cardA");
+        assertThat(findCard.getId()).isEqualTo("cardA");
     }
 
     @Test

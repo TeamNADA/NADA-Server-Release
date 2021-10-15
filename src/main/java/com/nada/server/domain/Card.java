@@ -3,22 +3,24 @@ package com.nada.server.domain;
 import static javax.persistence.FetchType.LAZY;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
+import javax.persistence.PrePersist;
+import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.domain.Persistable;
 
 @Entity
 @Getter @Setter
-public class Card {
+public class Card implements Persistable<String> {
 
     @Id
     @Column(name = "card_id")
@@ -30,7 +32,7 @@ public class Card {
     private String title;
     private String name;
 
-    private int age;
+    private String age;
     private String mbti;
     private String instagram;
     private String linkName;
@@ -54,7 +56,22 @@ public class Card {
     private LocalDateTime createDate;
 
     @ManyToOne(fetch = LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     private User user;
 
+    // save 전 select문 없애기 위함
+    @Transient
+    private boolean isNew = true;
+
+    @Override
+    public boolean isNew() {
+        return isNew;
+    }
+
+    @PrePersist
+    @PostLoad
+    void markNotNew() {
+        this.isNew = false;
+    }
 }

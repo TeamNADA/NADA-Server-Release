@@ -2,6 +2,7 @@ package com.nada.server.service;
 
 import com.nada.server.domain.Card;
 import com.nada.server.domain.User;
+import com.nada.server.dto.CardFrontDTO;
 import com.nada.server.repository.CardRepository;
 import com.nada.server.repository.UserRepository;
 import java.time.LocalDateTime;
@@ -44,11 +45,15 @@ public class CardService {
      * 카드 검색
      * 없다면 에러 발생
      */
-    public Card findOne(String cardId){
+    public CardFrontDTO findOne(String cardId){
         Optional<Card> findCard = cardRepository.findById(cardId);
 
         if(findCard.isPresent()){
-            return findCard.get();
+            Card c = findCard.get();
+            return new CardFrontDTO(c.getId(), c.getBackground(),
+                c.getTitle(), c.getName(), c.getBirthDate(), c.getAge(), c.getMbti(),
+                c.getInstagram(), c.getLinkName(), c.getLink(), c.getDescription());
+
         }else{
             throw new IllegalStateException("존재하지 않는 카드입니다.");
         }

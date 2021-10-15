@@ -1,7 +1,6 @@
 package com.nada.server.dto;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 public class CardFrontDTO {

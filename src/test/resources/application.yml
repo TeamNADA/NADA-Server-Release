@@ -1,6 +1,14 @@
 # TEST용 in-memory db 세팅
 # 스프링은 기본 datasource 설정이 없으면 기본적으로 메모리 DB사용함.
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+        format_sql: true
+    open-in-view: false
 logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace

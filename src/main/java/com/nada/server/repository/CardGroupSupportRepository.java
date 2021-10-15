@@ -1,12 +1,10 @@
 package com.nada.server.repository;
 
-import com.nada.server.domain.Card;
 import com.nada.server.domain.CardGroup;
 import com.nada.server.domain.Group;
 import com.nada.server.domain.QCard;
 import com.nada.server.domain.QCardGroup;
-import com.nada.server.domain.QGroup;
-import com.nada.server.repository.dto.CardFrontDTO;
+import com.nada.server.dto.CardFrontDTO;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;

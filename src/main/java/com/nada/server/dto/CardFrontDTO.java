@@ -1,4 +1,4 @@
-package com.nada.server.repository.dto;
+package com.nada.server.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,5 @@
 package com.nada.server.service;
 
-import com.nada.server.domain.Card;
 import com.nada.server.domain.Group;
 import com.nada.server.domain.User;
 import com.nada.server.repository.GroupRepository;

@@ -2,7 +2,6 @@ package com.nada.server.service;
 
 import com.nada.server.domain.Card;
 import com.nada.server.domain.User;
-import com.nada.server.dto.CardFrontDTO;
 import com.nada.server.dto.PriorityChangeDTO;
 import com.nada.server.repository.CardRepository;
 import com.nada.server.repository.UserRepository;

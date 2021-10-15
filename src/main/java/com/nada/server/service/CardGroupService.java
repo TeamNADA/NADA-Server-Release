@@ -9,7 +9,6 @@ import com.nada.server.repository.CardGroupSupportRepository;
 import com.nada.server.repository.CardRepository;
 import com.nada.server.repository.GroupRepository;
 import com.nada.server.repository.UserRepository;
-import com.nada.server.dto.CardFrontDTO;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

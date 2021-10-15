@@ -7,7 +7,6 @@ import com.nada.server.domain.Card;
 import com.nada.server.domain.Group;
 import com.nada.server.repository.CardGroupRepository;
 
-import com.nada.server.dto.CardFrontDTO;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

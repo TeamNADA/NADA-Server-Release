@@ -5,7 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.nada.server.domain.Card;
+import com.nada.server.dto.PriorityChangeDTO;
 import com.nada.server.repository.CardRepository;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,5 +107,30 @@ class CardServiceTest {
 
         //then
         assertThat(findCards.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void 카드_우선순위_변경() throws Exception{
+        //given
+        String userId = userService.login("userA");
+
+        Card card1 = new Card();
+        card1.setId("cardA");
+        cardService.create(card1, userId);
+
+        Card card2 = new Card();
+        card2.setId("cardB");
+        cardService.create(card2, userId);
+
+        List<PriorityChangeDTO> p = new ArrayList<>();
+        p.add(new PriorityChangeDTO("cardA", 1));
+        p.add(new PriorityChangeDTO("cardB", 0));
+
+        //when
+        cardService.changePriority(p);
+        List<Card> cards = cardService.findCards(userId);
+
+        //then
+        assertThat(cards.get(0).getId()).isEqualTo("cardB");
     }
 }

@@ -3,6 +3,7 @@ package com.nada.server.service;
 import com.nada.server.domain.Card;
 import com.nada.server.domain.User;
 import com.nada.server.dto.CardFrontDTO;
+import com.nada.server.dto.PriorityChangeDTO;
 import com.nada.server.repository.CardRepository;
 import com.nada.server.repository.UserRepository;
 import java.time.LocalDateTime;
@@ -60,5 +61,15 @@ public class CardService {
      */
     public List<Card> findCards(String userId){
         return cardRepository.findByUserIdOrderByPriorityAsc(userId);
+    }
+
+    /**
+     * 카드 우선순위 변경
+     */
+    public void changePriority(List<PriorityChangeDTO> changeList){
+        for (PriorityChangeDTO p : changeList) {
+            Card card = cardRepository.findById(p.getCardId()).get();
+            card.setPriority(p.getNewPriority());
+        }
     }
 }

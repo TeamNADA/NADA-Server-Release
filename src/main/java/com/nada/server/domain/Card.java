@@ -14,6 +14,8 @@ import javax.persistence.PrePersist;
 import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.domain.Persistable;
 
 @Entity
@@ -54,6 +56,7 @@ public class Card implements Persistable<String> {
     private LocalDateTime createDate;
 
     @ManyToOne(fetch = LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     private User user;
 

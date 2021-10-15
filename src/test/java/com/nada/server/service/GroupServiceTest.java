@@ -111,4 +111,21 @@ class GroupServiceTest {
         assertThat(findGroups.size()).isEqualTo(2);
     }
 
+    @Test
+    public void 유저_탈퇴_시_그룹_삭제() throws Exception{
+        //given
+        String userId = userService.login("userA");
+
+        Group group = new Group();
+        group.setName("groupA");
+        Long groupId = groupService.create(group, userId);
+
+        //when
+        userService.unsubscribe(userId);
+        List<Group> findGroups = groupService.findGroups(userId);
+
+        //then
+        assertThat(findGroups.size()).isEqualTo(0);
+    }
+
 }

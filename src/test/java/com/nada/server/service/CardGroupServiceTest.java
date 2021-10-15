@@ -4,10 +4,13 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.nada.server.domain.Card;
+import com.nada.server.domain.CardGroup;
 import com.nada.server.domain.Group;
 import com.nada.server.repository.CardGroupRepository;
 
+import com.nada.server.repository.UserRepository;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +27,8 @@ class CardGroupServiceTest {
 
     @Autowired
     UserService userService;
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     CardService cardService;
@@ -157,6 +162,32 @@ class CardGroupServiceTest {
         //then
         List<Card> findCards = cardGroupService.findCardsByGroup(groupId);
         assertThat(findCards.size()).isEqualTo(1);
+
+    }
+
+    @Test
+    public void 그룹_삭제_시_카드그룹_삭제() throws Exception{
+        //given
+        String authorId = userService.login("userA"); // 작성자
+        String userId = userService.login("userB"); // 카드 추가할 유저
+
+        Group group = new Group();
+        group.setName("groupA");
+        Long groupId = groupService.create(group, userId);
+
+        Card card1 = new Card();
+        card1.setId("cardA");
+        String card1Id = cardService.create(card1, authorId);
+        cardGroupService.add(card1Id, groupId, userId);
+
+        //when
+        groupService.delete(groupId);
+
+        //then
+        Optional<CardGroup> findCardGroup = cardGroupRepository.findByCardAndUser(card1,
+            userRepository.findById(userId).get());
+
+        assertThat(findCardGroup.isEmpty()).isEqualTo(true);
 
     }
 }

@@ -2,7 +2,6 @@ package com.nada.server.service;
 
 import com.nada.server.domain.Card;
 import com.nada.server.domain.User;
-import com.nada.server.dto.PriorityChangeDTO;
 import com.nada.server.repository.CardRepository;
 import com.nada.server.repository.UserRepository;
 import java.time.LocalDateTime;
@@ -64,11 +63,11 @@ public class CardService {
 
     /**
      * 카드 우선순위 변경
+     * 서비스 단에는 entity접근 가능케 오고,
+     * Controller에서 request를 받을 때 DTO에 mapping 시키자.
      */
-    public void changePriority(List<PriorityChangeDTO> changeList){
-        for (PriorityChangeDTO p : changeList) {
-            Card card = cardRepository.findById(p.getCardId()).get();
-            card.setPriority(p.getNewPriority());
-        }
+    public void changePriority(String cardId, int priority){
+        Card card = cardRepository.findById(cardId).get();
+        card.setPriority(priority);
     }
 }

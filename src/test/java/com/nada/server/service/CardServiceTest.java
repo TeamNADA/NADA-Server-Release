@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.nada.server.domain.Card;
-import com.nada.server.dto.PriorityChangeDTO;
 import com.nada.server.repository.CardRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,12 +121,9 @@ class CardServiceTest {
         card2.setId("cardB");
         cardService.create(card2, userId);
 
-        List<PriorityChangeDTO> p = new ArrayList<>();
-        p.add(new PriorityChangeDTO("cardA", 1));
-        p.add(new PriorityChangeDTO("cardB", 0));
-
         //when
-        cardService.changePriority(p);
+        cardService.changePriority("cardA", 1);
+        cardService.changePriority("cardB", 0);
         List<Card> cards = cardService.findCards(userId);
 
         //then

@@ -14,7 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
     @Bean // 스웨거 테스트를 위한 설정입니다
-    public Docket testapi(){
+    public Docket testApi(){
         return new Docket(DocumentationType.SWAGGER_2)
             .groupName("Test API")
             .apiInfo(new ApiInfoBuilder()
@@ -28,6 +28,22 @@ public class SwaggerConfig {
             .apis(RequestHandlerSelectors.basePackage("com.nada.server.controller"))
             .paths(PathSelectors.any())
             .build();
+    }
 
+    @Bean
+    public Docket nadaApi(){
+        return new Docket(DocumentationType.SWAGGER_2)
+            .groupName("NADA API")
+            .apiInfo(new ApiInfoBuilder()
+                .title("NADA API")
+                .description("NADA Server의 API 문서입니다!")
+                .version("1.0.0")
+                .build()
+            )
+            .useDefaultResponseMessages(false)
+            .select()
+            .apis(RequestHandlerSelectors.basePackage("com.nada.server.controller"))
+            .paths(PathSelectors.any())
+            .build();
     }
 }

@@ -4,6 +4,7 @@ import com.nada.server.domain.Card;
 import com.nada.server.domain.User;
 import com.nada.server.repository.CardRepository;
 import com.nada.server.repository.UserRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class CardService {
     public String create(Card card, String userId){
         User user = userRepository.findById(userId).get();
         card.setUser(user);
+        card.setCreateDate(LocalDateTime.now());
 
         cardRepository.save(card);
         return card.getId();

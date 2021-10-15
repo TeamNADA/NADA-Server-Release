@@ -34,7 +34,7 @@ public class Card implements Persistable<String> {
     private String title;
     private String name;
 
-    private int age;
+    private String age;
     private String mbti;
     private String instagram;
     private String linkName;

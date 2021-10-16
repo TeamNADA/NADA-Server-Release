@@ -1,6 +1,8 @@
 package com.nada.server.service;
 
+import com.nada.server.domain.Group;
 import com.nada.server.domain.User;
+import com.nada.server.repository.GroupRepository;
 import com.nada.server.repository.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -13,14 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
 
     /**
-     * 로그인/회원가입
-     * DB에 유저가 등록되어있는지 확인
-     * 1) 등록O -> 로그인 완료
-     * 2) 등록X -> 등록 시키고 로그인
+     * 로그인
+     * 등록되어 있지 않으면 회원가입 진행 요구
      */
-    @Transactional
     public String login(String id){
         Optional<User> findUser = userRepository.findById(id);
 
@@ -29,11 +29,26 @@ public class UserService {
             return findUser.get().getId();
         }else{
             // 2) 등록되지 않은 회원이라면
-            User user = new User();
-            user.setId(id);
-            User saveUser = userRepository.save(user);
-            return saveUser.getId();
+            throw new IllegalStateException("회원 가입을 진행해주세요!.");
         }
+    }
+
+    /**
+     * 회원가입
+     * 그룹 "미분류"도 default로 생성시킵니다.
+     */
+    @Transactional
+    public String register(String id){
+        User user = new User();
+        user.setId(id);
+        User saveUser = userRepository.save(user);
+
+        Group group = new Group();
+        group.setUser(saveUser);
+        group.setName("미분류");
+        groupRepository.save(group);
+
+        return saveUser.getId();
     }
 
     /**

@@ -37,7 +37,9 @@ class UserServiceTest {
     @Test
     public void 회원가입() throws Exception{
         //given
-        String userId = userService.register("userA");
+        User user = new User();
+        user.setId("userA");
+        String userId = userService.register(user);
 
         //when
         String loginId = userService.login(userId);

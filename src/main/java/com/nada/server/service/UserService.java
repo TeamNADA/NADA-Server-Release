@@ -38,9 +38,7 @@ public class UserService {
      * 그룹 "미분류"도 default로 생성시킵니다.
      */
     @Transactional
-    public String register(String id){
-        User user = new User();
-        user.setId(id);
+    public String register(User user){
         User saveUser = userRepository.save(user);
 
         Group group = new Group();

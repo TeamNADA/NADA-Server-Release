@@ -1,11 +1,17 @@
 package com.nada.server.dto;
 
-import lombok.AllArgsConstructor;
+import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class NResultDTO {
     private String msg;
     private Boolean success;
+    private LocalDateTime timestamp;
+
+    public NResultDTO(String msg, Boolean success) {
+        this.msg = msg;
+        this.success = success;
+        this.timestamp = LocalDateTime.now();
+    }
 }

@@ -6,7 +6,6 @@ import com.nada.server.exception.CustomException;
 import com.nada.server.exception.ErrorCode;
 import com.nada.server.repository.GroupRepository;
 import com.nada.server.repository.UserRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,11 +30,15 @@ public class UserService {
     }
 
     /**
-     * 회원가입
+     * 회원가입 - 이미 존재하는 유저일 경우 에러
      * 그룹 "미분류"도 default로 생성시킵니다.
      */
     @Transactional
     public String register(User user){
+        userRepository.findById(user.getId()).ifPresent( s -> {
+            throw new CustomException(ErrorCode.DUPLICATE_USER_ID);
+        });
+
         User saveUser = userRepository.save(user);
 
         Group group = new Group();
@@ -47,11 +50,12 @@ public class UserService {
     }
 
     /**
-     * 회원 탈퇴
+     * 회원 탈퇴 - 존재하지 않는 유저일 땐 에러
      */
     @Transactional
     public void unsubscribe(String id){
-        userRepository.deleteById(id);
+       userRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_USER));
+       userRepository.deleteById(id);
     }
 
 

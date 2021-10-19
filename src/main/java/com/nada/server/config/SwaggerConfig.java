@@ -1,5 +1,7 @@
 package com.nada.server.config;
 
+import com.fasterxml.classmate.TypeResolver;
+import com.nada.server.dto.BaseResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -9,7 +11,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@EnableSwagger2
 @Configuration
 public class SwaggerConfig {
 
@@ -31,8 +32,9 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public Docket nadaApi(){
+    public Docket nadaApi(TypeResolver typeResolver){
         return new Docket(DocumentationType.SWAGGER_2)
+            .additionalModels(typeResolver.resolve(BaseResponse.class))
             .groupName("NADA API")
             .apiInfo(new ApiInfoBuilder()
                 .title("NADA API")

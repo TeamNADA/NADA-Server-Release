@@ -2,6 +2,8 @@ package com.nada.server.service;
 
 import com.nada.server.domain.Group;
 import com.nada.server.domain.User;
+import com.nada.server.exception.CustomException;
+import com.nada.server.exception.ErrorCode;
 import com.nada.server.repository.GroupRepository;
 import com.nada.server.repository.UserRepository;
 import java.util.Optional;
@@ -22,15 +24,10 @@ public class UserService {
      * 등록되어 있지 않으면 회원가입 진행 요구
      */
     public String login(String id){
-        Optional<User> findUser = userRepository.findById(id);
+        User findUser = userRepository.findById(id)
+            .orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_USER));
 
-        if(findUser.isPresent()){
-            // 1) 등록된 회원이라면
-            return findUser.get().getId();
-        }else{
-            // 2) 등록되지 않은 회원이라면
-            throw new IllegalStateException("회원 가입을 진행해주세요!.");
-        }
+        return findUser.getId();
     }
 
     /**

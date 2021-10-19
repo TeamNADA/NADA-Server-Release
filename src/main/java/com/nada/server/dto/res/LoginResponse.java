@@ -2,12 +2,14 @@ package com.nada.server.dto.res;
 
 import com.nada.server.dto.BaseResponse;
 import com.nada.server.dto.payload.UserTokenDTO;
+import lombok.Getter;
 
-public class LoginDTO extends BaseResponse {
+@Getter
+public class LoginResponse extends BaseResponse {
     private UserTokenDTO data;
 
-    public LoginDTO(Boolean success, String msg, UserTokenDTO data) {
-        super(success, msg);
+    public LoginResponse(String msg, UserTokenDTO data) {
+        super(true, msg);
         this.data = data;
     }
 }

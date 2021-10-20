@@ -9,7 +9,7 @@ public class LoginResponse extends BaseResponse {
     private UserTokenDTO data;
 
     public LoginResponse(String msg, UserTokenDTO data) {
-        super(true, msg);
+        super(msg);
         this.data = data;
     }
 }

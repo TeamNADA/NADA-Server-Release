@@ -73,7 +73,7 @@ public class UserController {
     @DeleteMapping("/{user-id}")
     public ResponseEntity<BaseResponse> deleteUser(@PathVariable("user-id") String id){
         userService.unsubscribe(id);
-        BaseResponse response = new BaseResponse(true, "회원 탈퇴 성공");
+        BaseResponse response = new BaseResponse( "회원 탈퇴 성공");
         return new ResponseEntity(response, HttpStatus.OK);
     }
 

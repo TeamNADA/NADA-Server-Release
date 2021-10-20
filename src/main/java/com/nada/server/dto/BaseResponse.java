@@ -9,18 +9,16 @@ import org.springframework.http.ResponseEntity;
 
 @Getter
 public class BaseResponse {
-    private Boolean success;
     private String msg;
     private LocalDateTime timestamp = LocalDateTime.now();
 
-    public BaseResponse(boolean success, String msg) {
-        this.success = success;
+    public BaseResponse(String msg) {
         this.msg = msg;
     }
 
     public static ResponseEntity<BaseResponse> toErrorResponse(ErrorCode errorCode) {
         return ResponseEntity
             .status(errorCode.getHttpStatus())
-            .body(new BaseResponse(false, errorCode.getMsg()));
+            .body(new BaseResponse(errorCode.getMsg()));
     }
 }

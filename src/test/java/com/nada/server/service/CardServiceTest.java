@@ -5,12 +5,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.nada.server.domain.Card;
+import com.nada.server.domain.User;
 import com.nada.server.repository.CardRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -89,9 +91,12 @@ class CardServiceTest {
     }
 
     @Test
+    @Rollback(false)
     public void 작성한_카드_조회() throws Exception{
         //given
-        String userId = userService.login("userA");
+        User user = new User();
+        user.setId("userA");
+        String userId = userService.register(user);
 
         Card card1 = new Card();
         card1.setId("cardA");
@@ -101,13 +106,17 @@ class CardServiceTest {
         card2.setId("cardB");
         cardService.create(card2, userId);
 
+        Card card3 = new Card();
+        card3.setId("cardC");
+        cardService.create(card3, userId);
+
         //when
-        List<Card> findCards = cardService.findCards(userId);
+        List<Card> findCards = cardService.findCards(userId, 1, 2);
 
         //then
-        assertThat(findCards.size()).isEqualTo(2);
+        assertThat(findCards.get(0).getId()).isEqualTo("cardC");
     }
-
+    /*
     @Test
     public void 카드_우선순위_변경() throws Exception{
         //given
@@ -129,4 +138,6 @@ class CardServiceTest {
         //then
         assertThat(cards.get(0).getId()).isEqualTo("cardB");
     }
+
+     */
 }

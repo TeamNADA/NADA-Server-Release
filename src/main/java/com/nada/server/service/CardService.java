@@ -8,6 +8,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +24,18 @@ public class CardService {
 
     /**
      * 카드 생성
+     * priority 자동으로 삽입할 수 있게끔(index 이용, max값 +1)
      */
     @Transactional
     public String create(Card card, String userId){
         User user = userRepository.findById(userId).get();
+
+        Long maxPriority = cardRepository.maxPriority();
+        if(maxPriority == null){
+            card.setPriority(Long.valueOf(0));
+        }else{
+            card.setPriority(maxPriority+1);
+        }
         card.setUser(user);
         card.setCreateDate(LocalDateTime.now());
 
@@ -56,9 +67,11 @@ public class CardService {
 
     /**
      * 유저가 작성한 카드 목록 조회
+     * 오프셋 기반 페이지네이션 추가
      */
-    public List<Card> findCards(String userId){
-        return cardRepository.findByUserIdOrderByPriorityAsc(userId);
+    public List<Card> findCards(String userId, int offset, int size){
+        Pageable paging = PageRequest.of(offset, size, Sort.by("priority").ascending());
+        return cardRepository.findByUserId(userId, paging);
     }
 
     /**
@@ -66,7 +79,7 @@ public class CardService {
      * 서비스 단에는 entity접근 가능케 오고,
      * Controller에서 request를 받을 때 DTO에 mapping 시키자.
      */
-    public void changePriority(String cardId, int priority){
+    public void changePriority(String cardId, Long priority){
         Card card = cardRepository.findById(cardId).get();
         card.setPriority(priority);
     }

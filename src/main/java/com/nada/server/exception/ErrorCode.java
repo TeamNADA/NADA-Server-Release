@@ -19,7 +19,7 @@ public enum ErrorCode {
     INVALID_REFRESH_TOKEN(UNAUTHORIZED, "권한 정보가 없는(잘못된) 리프레시 토큰입니다"),
     EXPIRED_REFRESH_TOKEN(UNAUTHORIZED, "리프레시 토큰이 만료되었습니다."),
     // 로그인 관련
-    UNAUTHORIZED_USER(UNAUTHORIZED, "등록된 유저 정보가 없습니다. 회원가입을 진행해주세요."),
+    UNAUTHORIZED_USER(UNAUTHORIZED, "등록된 유저 정보가 없습니다."),
 
     /* 404 - 자원 존재하지 않음 */
     INVALID_CARD_ID(NOT_FOUND, "등록되지 않은 카드입니다."),

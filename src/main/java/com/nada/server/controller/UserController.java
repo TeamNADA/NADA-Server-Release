@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,12 +46,14 @@ public class UserController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
-    /*
+
     @ApiOperation(value = "소셜 회원가입", notes = "회원가입 시 그룹 '미분류'가 자동으로 만들어집니다.")
     @PostMapping("/register")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "회원가입 성공",
-            content = @Content(schema = @Schema(implementation = LoginResponse.class)))
+            content = @Content(schema = @Schema(implementation = LoginResponse.class))),
+        @ApiResponse(responseCode = "409", description = "회원가입 실패 - 이미 존재하는 유저입니다.",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
     })
     public ResponseEntity<LoginResponse> register(@RequestBody @Valid registerDTO request){
         User user = new User();
@@ -63,21 +66,16 @@ public class UserController {
     @ApiOperation(value = "회원 탈퇴")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "회원탈퇴 성공",
-            content = @Content(schema = @Schema(implementation = ResponseDTO.class)))
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+        @ApiResponse(responseCode = "401", description = "회원 탈퇴 실패 - 존재하지 않는 유저입니다.",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
     })
     @DeleteMapping("/{user-id}")
-    public ResponseEntity<ResponseDTO> deleteUser(@PathVariable("user-id") String id){
+    public ResponseEntity<BaseResponse> deleteUser(@PathVariable("user-id") String id){
         userService.unsubscribe(id);
-        ResponseDTO response = new ResponseDTO(true, "회원 탈퇴 성공");
+        BaseResponse response = new BaseResponse(true, "회원 탈퇴 성공");
         return new ResponseEntity(response, HttpStatus.OK);
     }
-
-    static class LoginResponse extends ResponseDTO<LoginDTO>{
-        public LoginResponse(Boolean success, String msg, LoginDTO res){
-            super(success, msg, res);
-        }
-    }
-     */
 
 
 

@@ -7,6 +7,7 @@ import com.nada.server.domain.QCard;
 import com.nada.server.domain.QCardGroup;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +22,7 @@ public class CardGroupSupportRepository extends QuerydslRepositorySupport {
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
-    public List<Card> findCardsByGroup(Group group){
+    public List<Card> findCardsByGroup(Group group, Pageable pageable){
         QCardGroup cardGroup = QCardGroup.cardGroup;
         QCard card = QCard.card;
 
@@ -31,6 +32,8 @@ public class CardGroupSupportRepository extends QuerydslRepositorySupport {
             .join(cardGroup.card, card)
             .where(cardGroup.group.eq(group))
             .orderBy(card.createDate.desc())
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
             .fetch();
     }
 }

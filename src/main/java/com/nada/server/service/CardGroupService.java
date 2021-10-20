@@ -12,6 +12,9 @@ import com.nada.server.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,9 +92,11 @@ public class CardGroupService {
     /**
      * 그룹에 포함된 카드 목록 조회
      */
-    public List<Card> findCardsByGroup(Long groupId){
+    public List<Card> findCardsByGroup(Long groupId, int offset, int size){
         Group findGroup = groupRepository.findById(groupId).get();
-        return cardGroupSupportRepository.findCardsByGroup(findGroup);
+
+        Pageable paging = PageRequest.of(offset, size, Sort.by("createDate").descending());
+        return cardGroupSupportRepository.findCardsByGroup(findGroup, paging);
     }
 
     /**

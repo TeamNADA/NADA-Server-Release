@@ -1,3 +1,6 @@
+# aws 설정파일
+/src/main/resources/aws.yml
+
 .DS_Store
 HELP.md
 .gradle

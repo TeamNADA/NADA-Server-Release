@@ -41,6 +41,9 @@ dependencies {
 	//querydsl 추가
 	implementation 'com.querydsl:querydsl-jpa'
 	implementation 'com.querydsl:querydsl-apt'
+
+	// s3
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
 }
 
 test {
@@ -64,3 +67,6 @@ compileQuerydsl{
 configurations {
 	querydsl.extendsFrom compileClasspath
 }
+
+/** * comileQuerydsl.doFirst 추가 */
+compileQuerydsl.doFirst { if(file(querydslDir).exists() ) delete(file(querydslDir)) }

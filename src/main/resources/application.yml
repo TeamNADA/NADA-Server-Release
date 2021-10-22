@@ -4,7 +4,14 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
-
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
   jpa:
     hibernate:
       ddl-auto: create

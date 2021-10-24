@@ -4,7 +4,6 @@ import com.nada.server.domain.Card;
 import com.nada.server.domain.User;
 import com.nada.server.repository.CardRepository;
 import com.nada.server.repository.UserRepository;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +24,7 @@ public class CardService {
     /**
      * 카드 생성
      * priority 자동으로 삽입할 수 있게끔(index 이용, max값 +1)
+     * 랜덤생성 문자열 필요
      */
     @Transactional
     public String create(Card card, String userId){
@@ -37,7 +37,6 @@ public class CardService {
             card.setPriority(maxPriority+1);
         }
         card.setUser(user);
-        card.setCreateDate(LocalDateTime.now());
 
         cardRepository.save(card);
         return card.getId();

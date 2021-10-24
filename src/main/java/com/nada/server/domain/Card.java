@@ -3,6 +3,8 @@ package com.nada.server.domain;
 import static javax.persistence.FetchType.LAZY;
 
 import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -51,12 +53,55 @@ public class Card implements Persistable<String> {
 
     private Long priority;
 
-    private LocalDateTime createDate;
+    private LocalDateTime createDate = LocalDateTime.now();
 
     @ManyToOne(fetch = LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public static Card createCard(String background, String birthDate, String title, String name, String mbti,
+        String instagram, String linkName, String link, String description, Boolean isMincho,
+        Boolean isSoju, Boolean isBoomuk, Boolean isSauced, String oneQuestion,
+        String oneAnswer, String twoQuestion, String twoAnswer) {
+
+        Card card = new Card();
+
+        // card Id 랜덤 UUID 이용한 랜덤생성
+        String cardId = UUID.randomUUID().toString().replaceAll("-", ""); // -를 제거해 주었다.
+        cardId = cardId.substring(0, 10).toUpperCase();
+        card.setId(cardId);
+
+        // birthdate 파싱하여 age값 세팅
+        Calendar current = Calendar.getInstance();
+        int currentYear  = current.get(Calendar.YEAR);
+        String temp = birthDate.split("/")[0];
+        int birthYear = Integer.parseInt(temp);
+        card.setAge((currentYear-birthYear+1) +"세");
+
+        card.setBackground(background);
+        card.setBirthDate(birthDate);
+        card.setTitle(title);
+        card.setName(name);
+        card.setMbti(mbti);
+
+        card.setInstagram(instagram);
+        card.setLinkName(linkName);
+        card.setLink(link);
+        card.setDescription(description);
+
+        card.setIsMincho(isMincho);
+        card.setIsSoju(isSoju);
+        card.setIsBoomuk(isBoomuk);
+        card.setIsSauced(isSauced);
+
+        card.setOneQuestion(oneQuestion);
+        card.setOneAnswer(oneAnswer);
+        card.setTwoQuestion(twoQuestion);
+        card.setTwoAnswer(twoAnswer);
+
+        return card;
+    }
 
     // save 전 select문 없애기 위함
     @Transient

@@ -14,7 +14,10 @@ public enum SuccessCode {
     /* 200 - 성공적인 요청 */
     LOGIN_SUCCESS(OK, "로그인 성공"),
     REGISTER_SUCCESS(OK, "회원가입 성공"),
-    UNSUBSCRIBE_SUCCESS(OK, "회원 탈퇴 성공");
+    UNSUBSCRIBE_SUCCESS(OK, "회원 탈퇴 성공"),
+
+    /* 201 - 자원 생성 */
+    CREATE_CARD(CREATED, "카드 생성 성공");
 
     private final HttpStatus httpStatus;
     private final String msg;

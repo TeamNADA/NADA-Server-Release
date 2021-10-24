@@ -1,9 +1,8 @@
 package com.nada.server.dto;
 
-import com.fasterxml.jackson.databind.ser.Serializers.Base;
-import com.nada.server.exception.ErrorCode;
+import com.nada.server.constants.ErrorCode;
+import com.nada.server.constants.SuccessCode;
 import java.time.LocalDateTime;
-import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 

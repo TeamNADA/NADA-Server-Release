@@ -1,4 +1,4 @@
-package com.nada.server.exception;
+package com.nada.server.constants;
 
 import static org.springframework.http.HttpStatus.*;
 

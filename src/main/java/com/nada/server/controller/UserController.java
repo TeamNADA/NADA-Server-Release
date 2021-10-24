@@ -1,5 +1,6 @@
 package com.nada.server.controller;
 
+import com.nada.server.constants.SuccessCode;
 import com.nada.server.dto.BaseResponse;
 import com.nada.server.dto.req.registerDTO;
 import com.nada.server.domain.User;
@@ -42,8 +43,8 @@ public class UserController {
     public ResponseEntity<LoginResponse> login(@PathVariable("user-id") String id){
         String userId = userService.login(id);
 
-        LoginResponse response = new LoginResponse("로그인 성공", new UserTokenDTO(userId));
-        return new ResponseEntity(response, HttpStatus.OK);
+        LoginResponse response = new LoginResponse(SuccessCode.LOGIN_SUCCESS.getMsg(), new UserTokenDTO(userId));
+        return new ResponseEntity(response, SuccessCode.LOGIN_SUCCESS.getHttpStatus());
     }
 
 
@@ -59,8 +60,8 @@ public class UserController {
         User user = new User();
         user.setId(request.getUserId());
         String userId = userService.register(user);
-        LoginResponse response = new LoginResponse("회원가입 성공", new UserTokenDTO(userId));
-        return new ResponseEntity(response, HttpStatus.OK);
+        LoginResponse response = new LoginResponse(SuccessCode.REGISTER_SUCCESS.getMsg(), new UserTokenDTO(userId));
+        return new ResponseEntity(response, SuccessCode.REGISTER_SUCCESS.getHttpStatus());
     }
 
     @ApiOperation(value = "회원 탈퇴")
@@ -73,8 +74,8 @@ public class UserController {
     @DeleteMapping("/{user-id}")
     public ResponseEntity<BaseResponse> deleteUser(@PathVariable("user-id") String id){
         userService.unsubscribe(id);
-        BaseResponse response = new BaseResponse( "회원 탈퇴 성공");
-        return new ResponseEntity(response, HttpStatus.OK);
+        BaseResponse response = new BaseResponse(SuccessCode.UNSUBSCRIBE_SUCCESS.getMsg());
+        return new ResponseEntity(response, SuccessCode.UNSUBSCRIBE_SUCCESS.getHttpStatus());
     }
 
 

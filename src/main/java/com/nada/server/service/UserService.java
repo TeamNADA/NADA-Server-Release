@@ -3,7 +3,7 @@ package com.nada.server.service;
 import com.nada.server.domain.Group;
 import com.nada.server.domain.User;
 import com.nada.server.exception.CustomException;
-import com.nada.server.exception.ErrorCode;
+import com.nada.server.constants.ErrorCode;
 import com.nada.server.repository.GroupRepository;
 import com.nada.server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

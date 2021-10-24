@@ -1,5 +1,6 @@
 package com.nada.server.exception;
 
+import com.nada.server.constants.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

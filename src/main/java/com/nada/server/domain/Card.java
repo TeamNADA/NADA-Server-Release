@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.Transient;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
@@ -35,21 +36,29 @@ public class Card implements Persistable<String> {
 
     private String age;
     private String mbti;
-    private String instagram;
-    private String linkName;
-    private String link;
-    private String description;
+
+    @Builder.Default
+    private String instagram = "";
+    @Builder.Default
+    private String linkName = "";
+    @Builder.Default
+    private String link = "";
+    @Builder.Default
+    private String description = "";
 
     private Boolean isMincho;
-
     private Boolean isSoju;
     private Boolean isBoomuk;
     private Boolean isSauced;
 
-    private String oneQuestion;
-    private String oneAnswer;
-    private String twoQuestion;
-    private String twoAnswer;
+    @Builder.Default
+    private String oneQuestion = "";
+    @Builder.Default
+    private String oneAnswer = "";
+    @Builder.Default
+    private String twoQuestion = "";
+    @Builder.Default
+    private String twoAnswer = "";
 
     private Long priority;
 

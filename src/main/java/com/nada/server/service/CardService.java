@@ -70,7 +70,15 @@ public class CardService {
      */
     public List<Card> findCards(String userId, int offset, int size){
         Pageable paging = PageRequest.of(offset, size, Sort.by("priority").ascending());
-        return cardRepository.findByUserId(userId, paging);
+        User user = userRepository.findById(userId).get();
+        return cardRepository.findByUser(user, paging);
+    }
+    /**
+     * 유저가 작성한 모든 카드 목록 조회
+     */
+    public List<Card> findCards(String userId) {
+        User user = userRepository.findById(userId).get();
+        return cardRepository.findByUserOrderByPriorityAsc(user);
     }
 
     /**

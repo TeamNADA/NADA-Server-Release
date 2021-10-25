@@ -3,9 +3,12 @@ package com.nada.server.controller;
 import com.nada.server.constants.SuccessCode;
 import com.nada.server.domain.Card;
 import com.nada.server.dto.BaseResponse;
-import com.nada.server.dto.CardFrontDTO;
+import com.nada.server.dto.payload.CardDTO;
+import com.nada.server.dto.payload.CardDateDTO;
+import com.nada.server.dto.payload.CardFrontDTO;
 import com.nada.server.dto.req.CreateCardDTO;
 import com.nada.server.dto.res.CardSerachResponse;
+import com.nada.server.dto.res.WrittenCardResponse;
 import com.nada.server.service.CardService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +16,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -85,4 +91,43 @@ public class CardController {
         CardSerachResponse response = new CardSerachResponse(code.getMsg(), cardFrontDTO);
         return new ResponseEntity(response, code.getHttpStatus());
     }
+
+    @ApiOperation(value = "작성한 카드 리스트 조회")
+    @GetMapping("/cards")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "작성한 카드 리스트 조회 성공",
+            content = @Content(schema = @Schema(implementation = WrittenCardResponse.class))),
+        @ApiResponse(responseCode = "400", description = "유저 아이디 값 없음",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    public ResponseEntity<WrittenCardResponse> cardList(
+        @RequestParam(value = "userId") String userId,
+        @RequestParam(value = "list", defaultValue = "0", required = false) boolean list,
+        @RequestParam(value = "offset", defaultValue = "0", required = false) Integer offset) {
+
+        List<Card> findCards;
+
+        SuccessCode code = SuccessCode.LOAD_WRITTEN_CARD_SUCCESS;
+        WrittenCardResponse response;
+
+        if(!list){
+            findCards = cardService.findCards(userId, offset, 1);
+            List<CardDTO> cards = findCards.stream()
+                .map(card -> new CardDTO(card.getId(), card.getBackground(), card.getTitle(),
+                    card.getName(), card.getBirthDate(), card.getAge(), card.getMbti(), card.getInstagram(),
+                    card.getLinkName(), card.getLink(), card.getDescription(), card.getIsMincho(), card.getIsSoju(),
+                    card.getIsBoomuk(), card.getIsSauced(), card.getOneQuestion(), card.getOneAnswer(),
+                    card.getTwoQuestion(), card.getTwoAnswer()))
+                .collect(Collectors.toList());
+            response = new WrittenCardResponse(code.getMsg(), offset, cards, null);
+        }else{
+            findCards = cardService.findCards(userId);
+            List<CardDateDTO> cardDates = findCards.stream()
+                .map(card -> new CardDateDTO(card.getId(), card.getTitle(), card.getBirthDate()))
+                .collect(Collectors.toList());
+            response = new WrittenCardResponse(code.getMsg(), null,null, cardDates);
+        }
+        return new ResponseEntity(response, code.getHttpStatus());
+    }
+
 }

@@ -18,6 +18,7 @@ public enum SuccessCode {
     DELETE_CARD_SUCCESS(OK, "카드 삭제 성공"),
     SEARCH_CARD_SUCCESS(OK, "카드 검색 성공"),
     LOAD_WRITTEN_CARD_SUCCESS(OK, "작성한 카드 리스트 조회 성공"),
+    MODIFY_PRIORITY_SUCCESS(OK, "카드 우선순위 변경 성공"),
 
     /* 201 - 자원 생성 */
     CREATE_CARD_SUCCESS(CREATED, "카드 생성 성공");

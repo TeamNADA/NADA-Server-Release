@@ -6,6 +6,7 @@ import com.nada.server.dto.BaseResponse;
 import com.nada.server.dto.payload.CardDTO;
 import com.nada.server.dto.payload.CardDateDTO;
 import com.nada.server.dto.payload.CardFrontDTO;
+import com.nada.server.dto.req.ChangePriorityDTO;
 import com.nada.server.dto.req.CreateCardDTO;
 import com.nada.server.dto.res.CardSerachResponse;
 import com.nada.server.dto.res.WrittenCardResponse;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -130,4 +132,19 @@ public class CardController {
         return new ResponseEntity(response, code.getHttpStatus());
     }
 
+
+    @ApiOperation(value = "카드 우선순위 변경(명함 리스트 편집)")
+    @PutMapping("/cards")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "카드 우선순위 변경 성공",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+        @ApiResponse(responseCode ="404", description = "존재하지 않는 카드 ID",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    public ResponseEntity<BaseResponse> changeCardPriority(@RequestBody @Valid ChangePriorityDTO request){
+        request.getOrdered().forEach(order -> cardService.changePriority(order.getCardId(), order.getPriority()));
+        SuccessCode code = SuccessCode.MODIFY_PRIORITY_SUCCESS;
+        BaseResponse response = new BaseResponse(code.getMsg());
+        return new ResponseEntity(response, code.getHttpStatus());
+    }
 }

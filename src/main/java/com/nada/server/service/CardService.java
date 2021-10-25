@@ -7,7 +7,6 @@ import com.nada.server.exception.CustomException;
 import com.nada.server.repository.CardRepository;
 import com.nada.server.repository.UserRepository;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,9 +31,9 @@ public class CardService {
     public String create(Card card, String userId){
         User user = userRepository.findById(userId).get();
 
-        Long maxPriority = cardRepository.maxPriority();
+        Integer maxPriority = cardRepository.maxPriority();
         if(maxPriority == null){
-            card.setPriority(Long.valueOf(0));
+            card.setPriority(Integer.valueOf(0));
         }else{
             card.setPriority(maxPriority+1);
         }
@@ -85,9 +84,11 @@ public class CardService {
      * 카드 우선순위 변경
      * 서비스 단에는 entity접근 가능케 오고,
      * Controller에서 request를 받을 때 DTO에 mapping 시키자.
+     * 해당 카드가 없으면 에러발생
      */
-    public void changePriority(String cardId, Long priority){
-        Card card = cardRepository.findById(cardId).get();
+    @Transactional
+    public void changePriority(String cardId, int priority){
+        Card card = cardRepository.findById(cardId).orElseThrow(() -> new CustomException(ErrorCode.INVALID_CARD_ID));
         card.setPriority(priority);
     }
 }

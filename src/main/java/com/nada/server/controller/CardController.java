@@ -8,6 +8,7 @@ import com.nada.server.dto.payload.CardDateDTO;
 import com.nada.server.dto.payload.CardFrontDTO;
 import com.nada.server.dto.req.ChangePriorityDTO;
 import com.nada.server.dto.req.CreateCardDTO;
+import com.nada.server.dto.res.CardDetailResponse;
 import com.nada.server.dto.res.CardSerachResponse;
 import com.nada.server.dto.res.WrittenCardResponse;
 import com.nada.server.service.CardService;
@@ -99,7 +100,7 @@ public class CardController {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "작성한 카드 리스트 조회 성공",
             content = @Content(schema = @Schema(implementation = WrittenCardResponse.class))),
-        @ApiResponse(responseCode = "400", description = "유저 아이디 값 없음",
+        @ApiResponse(responseCode = "400", description = "요청 값 속 유저 아이디 값 없음",
             content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     public ResponseEntity<WrittenCardResponse> cardList(
@@ -138,6 +139,8 @@ public class CardController {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "카드 우선순위 변경 성공",
             content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+        @ApiResponse(responseCode = "400", description = "요청 값 부족",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
         @ApiResponse(responseCode ="404", description = "존재하지 않는 카드 ID",
             content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
@@ -145,6 +148,28 @@ public class CardController {
         request.getOrdered().forEach(order -> cardService.changePriority(order.getCardId(), order.getPriority()));
         SuccessCode code = SuccessCode.MODIFY_PRIORITY_SUCCESS;
         BaseResponse response = new BaseResponse(code.getMsg());
+        return new ResponseEntity(response, code.getHttpStatus());
+    }
+
+    @ApiOperation(value = "명함 세부 조회")
+    @GetMapping("/card/{card-id}")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "명함 세부 조회 성공",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+        @ApiResponse(responseCode ="404", description = "존재하지 않는 카드 ID",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    public ResponseEntity<CardDetailResponse> getDetail(@PathVariable("card-id") String cardId){
+        Card findCard = cardService.findOne(cardId);
+
+        CardDTO card = new CardDTO(findCard.getId(), findCard.getBackground(), findCard.getTitle(),
+            findCard.getName(), findCard.getBirthDate(), findCard.getAge(), findCard.getMbti(), findCard.getInstagram(),
+            findCard.getLinkName(), findCard.getLink(), findCard.getDescription(), findCard.getIsMincho(),
+            findCard.getIsSoju(), findCard.getIsBoomuk(), findCard.getIsSauced(), findCard.getOneQuestion(),
+            findCard.getOneAnswer(), findCard.getTwoQuestion(), findCard.getTwoAnswer());
+        SuccessCode code = SuccessCode.LOAD_CARD_SUCCESS;
+
+        CardDetailResponse response = new CardDetailResponse(code.getMsg(), card);
         return new ResponseEntity(response, code.getHttpStatus());
     }
 }

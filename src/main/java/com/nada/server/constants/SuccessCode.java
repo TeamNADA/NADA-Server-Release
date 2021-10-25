@@ -16,6 +16,7 @@ public enum SuccessCode {
     REGISTER_SUCCESS(OK, "회원가입 성공"),
     UNSUBSCRIBE_SUCCESS(OK, "회원 탈퇴 성공"),
     DELETE_CARD(OK, "카드 삭제 성공"),
+    SEARCH_CARD(OK, "카드 검색 성공"),
 
     /* 201 - 자원 생성 */
     CREATE_CARD(CREATED, "카드 생성 성공");

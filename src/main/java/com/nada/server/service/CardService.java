@@ -60,13 +60,8 @@ public class CardService {
      * 없다면 에러 발생
      */
     public Card findOne(String cardId){
-        Optional<Card> findCard = cardRepository.findById(cardId);
-
-        if(findCard.isPresent()){
-            return findCard.get();
-        }else{
-            throw new IllegalStateException("존재하지 않는 카드입니다.");
-        }
+        return cardRepository.findById(cardId)
+            .orElseThrow(() -> new CustomException(ErrorCode.INVALID_CARD_ID));
     }
 
     /**

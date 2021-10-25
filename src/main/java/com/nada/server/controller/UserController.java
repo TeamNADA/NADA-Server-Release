@@ -43,8 +43,9 @@ public class UserController {
     public ResponseEntity<LoginResponse> login(@PathVariable("user-id") String id){
         String userId = userService.login(id);
 
-        LoginResponse response = new LoginResponse(SuccessCode.LOGIN_SUCCESS.getMsg(), new UserTokenDTO(userId));
-        return new ResponseEntity(response, SuccessCode.LOGIN_SUCCESS.getHttpStatus());
+        SuccessCode code = SuccessCode.LOGIN_SUCCESS;
+        LoginResponse response = new LoginResponse(code.getMsg(), new UserTokenDTO(userId));
+        return new ResponseEntity(response, code.getHttpStatus());
     }
 
 
@@ -60,8 +61,10 @@ public class UserController {
         User user = new User();
         user.setId(request.getUserId());
         String userId = userService.register(user);
-        LoginResponse response = new LoginResponse(SuccessCode.REGISTER_SUCCESS.getMsg(), new UserTokenDTO(userId));
-        return new ResponseEntity(response, SuccessCode.REGISTER_SUCCESS.getHttpStatus());
+
+        SuccessCode code = SuccessCode.REGISTER_SUCCESS;
+        LoginResponse response = new LoginResponse(code.getMsg(), new UserTokenDTO(userId));
+        return new ResponseEntity(response, code.getHttpStatus());
     }
 
     @ApiOperation(value = "회원 탈퇴")
@@ -74,8 +77,10 @@ public class UserController {
     @DeleteMapping("/{user-id}")
     public ResponseEntity<BaseResponse> deleteUser(@PathVariable("user-id") String id){
         userService.unsubscribe(id);
-        BaseResponse response = new BaseResponse(SuccessCode.UNSUBSCRIBE_SUCCESS.getMsg());
-        return new ResponseEntity(response, SuccessCode.UNSUBSCRIBE_SUCCESS.getHttpStatus());
+
+        SuccessCode code = SuccessCode.UNSUBSCRIBE_SUCCESS;
+        BaseResponse response = new BaseResponse(code.getMsg());
+        return new ResponseEntity(response, code.getHttpStatus());
     }
 
 

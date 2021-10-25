@@ -1,12 +1,12 @@
 package com.nada.server.service;
 
+import com.nada.server.constants.ErrorCode;
 import com.nada.server.domain.Card;
 import com.nada.server.domain.User;
+import com.nada.server.exception.CustomException;
 import com.nada.server.repository.CardRepository;
 import com.nada.server.repository.UserRepository;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,19 +25,19 @@ public class CardService {
     /**
      * 카드 생성
      * priority 자동으로 삽입할 수 있게끔(index 이용, max값 +1)
+     * 랜덤생성 문자열 필요
      */
     @Transactional
     public String create(Card card, String userId){
         User user = userRepository.findById(userId).get();
 
-        Long maxPriority = cardRepository.maxPriority();
+        Integer maxPriority = cardRepository.maxPriority();
         if(maxPriority == null){
-            card.setPriority(Long.valueOf(0));
+            card.setPriority(Integer.valueOf(0));
         }else{
             card.setPriority(maxPriority+1);
         }
         card.setUser(user);
-        card.setCreateDate(LocalDateTime.now());
 
         cardRepository.save(card);
         return card.getId();
@@ -45,9 +45,12 @@ public class CardService {
 
     /**
      * 카드 삭제
+     * 없다면 에러발생
      */
     @Transactional
     public void delete(String cardId){
+        cardRepository.findById(cardId)
+            .orElseThrow(() -> new CustomException(ErrorCode.INVALID_CARD_ID));
         cardRepository.deleteById(cardId);
     }
 
@@ -56,13 +59,8 @@ public class CardService {
      * 없다면 에러 발생
      */
     public Card findOne(String cardId){
-        Optional<Card> findCard = cardRepository.findById(cardId);
-
-        if(findCard.isPresent()){
-            return findCard.get();
-        }else{
-            throw new IllegalStateException("존재하지 않는 카드입니다.");
-        }
+        return cardRepository.findById(cardId)
+            .orElseThrow(() -> new CustomException(ErrorCode.INVALID_CARD_ID));
     }
 
     /**
@@ -71,16 +69,26 @@ public class CardService {
      */
     public List<Card> findCards(String userId, int offset, int size){
         Pageable paging = PageRequest.of(offset, size, Sort.by("priority").ascending());
-        return cardRepository.findByUserId(userId, paging);
+        User user = userRepository.findById(userId).get();
+        return cardRepository.findByUser(user, paging);
+    }
+    /**
+     * 유저가 작성한 모든 카드 목록 조회
+     */
+    public List<Card> findCards(String userId) {
+        User user = userRepository.findById(userId).get();
+        return cardRepository.findByUserOrderByPriorityAsc(user);
     }
 
     /**
      * 카드 우선순위 변경
      * 서비스 단에는 entity접근 가능케 오고,
      * Controller에서 request를 받을 때 DTO에 mapping 시키자.
+     * 해당 카드가 없으면 에러발생
      */
-    public void changePriority(String cardId, Long priority){
-        Card card = cardRepository.findById(cardId).get();
+    @Transactional
+    public void changePriority(String cardId, int priority){
+        Card card = cardRepository.findById(cardId).orElseThrow(() -> new CustomException(ErrorCode.INVALID_CARD_ID));
         card.setPriority(priority);
     }
 }

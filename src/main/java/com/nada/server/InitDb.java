@@ -42,6 +42,16 @@ public class InitDb {
             // 카드 생성
             Card card = new Card();
             card.setId("cardA");
+            card.setBackground("사진파일 어쩌구");
+            card.setTitle("명함이름이여");
+            card.setName("내 이름이여");
+            card.setBirthDate("1999/05/12");
+            card.setAge("23세");
+            card.setMbti("ENFP");
+            card.setIsMincho(true);
+            card.setIsBoomuk(false);
+            card.setIsSoju(true);
+            card.setIsSauced(true);
             cardService.create(card, "nada");
         }
 

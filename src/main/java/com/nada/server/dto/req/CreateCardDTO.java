@@ -30,13 +30,13 @@ public class CreateCardDTO {
     private String description;
 
     @NotNull(message = "민초 여부는 필수입니다")
-    private boolean isMincho;
+    private Boolean isMincho;
     @NotNull(message = "소맥 여부는 필수입니다")
-    private boolean isSoju;
+    private Boolean isSoju;
     @NotNull(message = "부찍먹 여부는 필수입니다")
-    private boolean isBoomuk;
+    private Boolean isBoomuk;
     @NotNull(message = "양냠후라이도 여부는 필수입니다")
-    private boolean isSauced;
+    private Boolean isSauced;
 
     private String oneQuestion;
     private String oneAnswer;

@@ -46,7 +46,7 @@ public class CardController {
 
         Card newCard = Card.createCard("background", card.getBirthDate(), card.getTitle(),
             card.getName(), card.getMbti(), card.getInstagram(), card.getLinkName(), card.getLink(), card.getDescription(),
-            card.isMincho(), card.isSoju(), card.isBoomuk(), card.isSauced(), card.getOneQuestion(),
+            card.getIsMincho(), card.getIsSoju(), card.getIsBoomuk(),card.getIsSauced(), card.getOneQuestion(),
             card.getOneAnswer(), card.getTwoQuestion(), card.getTwoAnswer());
 
         cardService.create(newCard, "nada");

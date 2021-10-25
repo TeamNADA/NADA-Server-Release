@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,4 +45,17 @@ public class CardController {
         return new ResponseEntity(response, SuccessCode.CREATE_CARD.getHttpStatus());
     }
 
+    @ApiOperation(value = "카드 삭제")
+    @DeleteMapping("/card/{card-id}")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "카드 삭제 성공",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 카드 ID",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    public ResponseEntity<BaseResponse> deleteCard(@PathVariable("card-id") String cardId){
+        cardService.delete(cardId);
+        BaseResponse response = new BaseResponse(SuccessCode.DELETE_CARD.getMsg());
+        return new ResponseEntity(response, SuccessCode.DELETE_CARD.getHttpStatus());
+    }
 }

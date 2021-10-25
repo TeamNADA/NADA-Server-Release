@@ -1,7 +1,9 @@
 package com.nada.server.service;
 
+import com.nada.server.constants.ErrorCode;
 import com.nada.server.domain.Card;
 import com.nada.server.domain.User;
+import com.nada.server.exception.CustomException;
 import com.nada.server.repository.CardRepository;
 import com.nada.server.repository.UserRepository;
 import java.util.List;
@@ -44,9 +46,12 @@ public class CardService {
 
     /**
      * 카드 삭제
+     * 없다면 에러발생
      */
     @Transactional
     public void delete(String cardId){
+        cardRepository.findById(cardId)
+            .orElseThrow(() -> new CustomException(ErrorCode.INVALID_CARD_ID));
         cardRepository.deleteById(cardId);
     }
 

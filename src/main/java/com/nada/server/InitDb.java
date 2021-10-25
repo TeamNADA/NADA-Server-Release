@@ -53,6 +53,20 @@ public class InitDb {
             card.setIsSoju(true);
             card.setIsSauced(true);
             cardService.create(card, "nada");
+
+            Card card1 = new Card();
+            card1.setId("cardB");
+            card1.setBackground("파일더미가");
+            card1.setTitle("나다 수석졸업생");
+            card1.setName("예원이여");
+            card1.setBirthDate("1967/06/21");
+            card1.setAge("1004세");
+            card1.setMbti("ISTJ");
+            card1.setIsMincho(false);
+            card1.setIsBoomuk(false);
+            card1.setIsSoju(true);
+            card1.setIsSauced(true);
+            cardService.create(card1, "nada");
         }
 
 

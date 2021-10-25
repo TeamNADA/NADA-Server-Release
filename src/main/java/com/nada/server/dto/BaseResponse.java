@@ -22,9 +22,10 @@ public class BaseResponse {
             .body(new BaseResponse(errorCode.getMsg()));
     }
 
-    public static ResponseEntity<BaseResponse> toUnValidRequestErrorResponse(String msg) {
+    public static ResponseEntity<BaseResponse> toCustomErrorResponse(String msg, HttpStatus status){
         return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
+            .status(status)
             .body(new BaseResponse(msg));
     }
+
 }

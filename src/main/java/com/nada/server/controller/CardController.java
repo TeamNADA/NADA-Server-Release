@@ -44,8 +44,9 @@ public class CardController {
             card.getOneAnswer(), card.getTwoQuestion(), card.getTwoAnswer());
 
         cardService.create(newCard, "nada");
-        BaseResponse response = new BaseResponse(SuccessCode.CREATE_CARD.getMsg());
-        return new ResponseEntity(response, SuccessCode.CREATE_CARD.getHttpStatus());
+        SuccessCode code = SuccessCode.CREATE_CARD_SUCCESS;
+        BaseResponse response = new BaseResponse(code.getMsg());
+        return new ResponseEntity(response, code.getHttpStatus());
     }
 
     @ApiOperation(value = "카드 삭제")
@@ -58,8 +59,10 @@ public class CardController {
     })
     public ResponseEntity<BaseResponse> delete(@PathVariable("card-id") String cardId){
         cardService.delete(cardId);
-        BaseResponse response = new BaseResponse(SuccessCode.DELETE_CARD.getMsg());
-        return new ResponseEntity(response, SuccessCode.DELETE_CARD.getHttpStatus());
+
+        SuccessCode code = SuccessCode.DELETE_CARD_SUCCESS;
+        BaseResponse response = new BaseResponse(code.getMsg());
+        return new ResponseEntity(response, code.getHttpStatus());
     }
 
     @ApiOperation(value = "카드 검색")
@@ -78,7 +81,7 @@ public class CardController {
             card.getAge(), card.getMbti(), card.getInstagram(), card.getLinkName(), card.getLink(),
             card.getDescription());
 
-        SuccessCode code = SuccessCode.SEARCH_CARD;
+        SuccessCode code = SuccessCode.SEARCH_CARD_SUCCESS;
         CardSerachResponse response = new CardSerachResponse(code.getMsg(), cardFrontDTO);
         return new ResponseEntity(response, code.getHttpStatus());
     }

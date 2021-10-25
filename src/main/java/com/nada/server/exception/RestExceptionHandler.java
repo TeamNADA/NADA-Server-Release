@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -20,14 +21,19 @@ public class RestExceptionHandler{
     }
 
     @ExceptionHandler(value = { MethodArgumentNotValidException.class })
-    protected ResponseEntity<BaseResponse> handleCustomException(MethodArgumentNotValidException e) {
+    protected ResponseEntity<BaseResponse> handleMethodArgNotValidException(MethodArgumentNotValidException e) {
         return BaseResponse.toCustomErrorResponse(e.getBindingResult().getAllErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = { HttpRequestMethodNotSupportedException.class })
-    protected ResponseEntity<BaseResponse> handleCustomException(HttpRequestMethodNotSupportedException e) {
+    protected ResponseEntity<BaseResponse> handleMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         ErrorCode code = ErrorCode.METHOD_NOT_SUPPORTED;
         return BaseResponse.toCustomErrorResponse(code.getMsg(), code.getHttpStatus());
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    protected ResponseEntity<BaseResponse> handleRequestParamNotValidException(MissingServletRequestParameterException e) {
+        return BaseResponse.toCustomErrorResponse(e.getParameterName()+" 값을 필수로 넣어주세요!", HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = { Exception.class })

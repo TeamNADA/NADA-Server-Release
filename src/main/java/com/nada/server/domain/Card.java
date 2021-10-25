@@ -60,7 +60,7 @@ public class Card implements Persistable<String> {
     @Builder.Default
     private String twoAnswer = "";
 
-    private Long priority;
+    private Integer priority;
 
     private LocalDateTime createDate = LocalDateTime.now();
 

@@ -1,14 +1,10 @@
-package com.nada.server.dto.req;
+package com.nada.server.dto.payload;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
-
 @Data
 public class CreateCardDTO {
-    private MultipartFile image;
-
     @NotEmpty(message = "(작성자)유저 아이디는 필수입니다")
     private String userId;
 

@@ -5,6 +5,7 @@ import com.nada.server.dto.BaseResponse;
 import lombok.Builder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -20,8 +21,15 @@ public class RestExceptionHandler{
         return BaseResponse.toErrorResponse(e.getErrorCode());
     }
 
+    // @RequestBody valid 에러
     @ExceptionHandler(value = { MethodArgumentNotValidException.class })
     protected ResponseEntity<BaseResponse> handleMethodArgNotValidException(MethodArgumentNotValidException e) {
+        return BaseResponse.toCustomErrorResponse(e.getBindingResult().getAllErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    // @ModelAttribute valid 에러
+    @ExceptionHandler(value = { BindException.class })
+    protected ResponseEntity<BaseResponse> handleMethodArgNotValidException(BindException e) {
         return BaseResponse.toCustomErrorResponse(e.getBindingResult().getAllErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST);
     }
 

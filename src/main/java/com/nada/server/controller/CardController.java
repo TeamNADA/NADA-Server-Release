@@ -1,13 +1,15 @@
 package com.nada.server.controller;
 
+import com.nada.server.commons.S3Utils;
 import com.nada.server.constants.SuccessCode;
 import com.nada.server.domain.Card;
 import com.nada.server.dto.BaseResponse;
 import com.nada.server.dto.payload.CardDTO;
 import com.nada.server.dto.payload.CardDateDTO;
 import com.nada.server.dto.payload.CardFrontDTO;
+import com.nada.server.dto.payload.CreateCardDTO;
 import com.nada.server.dto.req.ChangePriorityDTO;
-import com.nada.server.dto.req.CreateCardDTO;
+import com.nada.server.dto.req.CreateCardRequest;
 import com.nada.server.dto.res.CardDetailResponse;
 import com.nada.server.dto.res.CardSerachResponse;
 import com.nada.server.dto.res.WrittenCardResponse;
@@ -18,6 +20,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -25,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,6 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CardController {
 
     private final CardService cardService;
+    private final S3Utils s3Utils;
 
     @ApiOperation(value = "카드 생성")
     @PostMapping("/card")
@@ -45,14 +50,27 @@ public class CardController {
         @ApiResponse(responseCode = "200", description = "카드 생성 성공",
             content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
-    public ResponseEntity<BaseResponse> create(@RequestBody @Valid CreateCardDTO card){
+    public ResponseEntity<BaseResponse> create(@ModelAttribute @Valid CreateCardRequest card) throws IOException {
 
-        Card newCard = Card.createCard("background", card.getBirthDate(), card.getTitle(),
-            card.getName(), card.getMbti(), card.getInstagram(), card.getLinkName(), card.getLink(), card.getDescription(),
-            card.getIsMincho(), card.getIsSoju(), card.getIsBoomuk(),card.getIsSauced(), card.getOneQuestion(),
-            card.getOneAnswer(), card.getTwoQuestion(), card.getTwoAnswer());
+        CreateCardDTO cardData = card.getCard();
 
-        cardService.create(newCard, "nada");
+        Integer isDefault = card.getCard().getDefaultImage();
+        String imageURL;
+
+        if(isDefault == 0){
+            imageURL = s3Utils.upload(card.getImage());
+        }else{
+            // 지정 이미지
+            imageURL = "Default IMAGE~";
+        }
+
+        Card newCard = Card.createCard(imageURL, cardData.getBirthDate(), cardData.getTitle(),
+            cardData.getName(), cardData.getMbti(), cardData.getInstagram(), cardData.getLinkName(), cardData.getLink(), cardData.getDescription(),
+            cardData.getIsMincho(), cardData.getIsSoju(), cardData.getIsBoomuk(),cardData.getIsSauced(), cardData.getOneQuestion(),
+            cardData.getOneAnswer(), cardData.getTwoQuestion(), cardData.getTwoAnswer());
+
+        cardService.create(newCard, cardData.getUserId());
+
         SuccessCode code = SuccessCode.CREATE_CARD_SUCCESS;
         BaseResponse response = new BaseResponse(code.getMsg());
         return new ResponseEntity(response, code.getHttpStatus());
@@ -67,7 +85,11 @@ public class CardController {
             content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     public ResponseEntity<BaseResponse> delete(@PathVariable("card-id") String cardId){
-        cardService.delete(cardId);
+        Card findCard = cardService.findOne(cardId);
+
+        // todo -> default 이미지일 때 삭제 X
+        s3Utils.deleteBackground(findCard.getBackground());
+        cardService.delete(findCard);
 
         SuccessCode code = SuccessCode.DELETE_CARD_SUCCESS;
         BaseResponse response = new BaseResponse(code.getMsg());

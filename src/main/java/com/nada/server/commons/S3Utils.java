@@ -27,7 +27,7 @@ public class S3Utils {
 
         amazonS3Client.putObject(new PutObjectRequest(bucket, "cards/"+fileName, file.getInputStream(), null)
             .withCannedAcl(CannedAccessControlList.PublicRead));
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+        return amazonS3Client.getUrl(bucket, "cards/"+fileName).toString();
     }
 
     public void deleteBackground(String url){

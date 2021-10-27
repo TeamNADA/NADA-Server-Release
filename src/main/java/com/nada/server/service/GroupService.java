@@ -1,7 +1,9 @@
 package com.nada.server.service;
 
+import com.nada.server.constants.ErrorCode;
 import com.nada.server.domain.Group;
 import com.nada.server.domain.User;
+import com.nada.server.exception.CustomException;
 import com.nada.server.repository.GroupRepository;
 import com.nada.server.repository.UserRepository;
 import java.util.List;
@@ -38,7 +40,7 @@ public class GroupService {
     private void validateGroupName(String groupName, String userId) {
         List<Group> findGroups = groupRepository.findByNameAndUser_Id(groupName, userId);
         if (!findGroups.isEmpty()) {
-            throw new IllegalStateException("이미 존재하는 그룹 이름입니다.");
+            throw new CustomException(ErrorCode.DUPLICATE_GROUP_NAME);
         }
     }
 
@@ -55,7 +57,8 @@ public class GroupService {
      */
     @Transactional
     public void changeName(Long groupId, String groupName){
-        Group findGroup = groupRepository.findById(groupId).get();
+        Group findGroup = groupRepository.findById(groupId)
+            .orElseThrow(() -> new CustomException(ErrorCode.INVALID_GROUP_ID));
         findGroup.setName(groupName);
     }
 

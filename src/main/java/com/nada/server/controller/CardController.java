@@ -48,9 +48,11 @@ public class CardController {
     @PostMapping("/card")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "카드 생성 성공",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+        @ApiResponse(responseCode = "400", description = "요청 값 부족",
             content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
-    public ResponseEntity<BaseResponse> create(@ModelAttribute @Valid CreateCardRequest card) throws IOException {
+    public ResponseEntity<BaseResponse> createCard(@ModelAttribute @Valid CreateCardRequest card) throws IOException {
 
         CreateCardDTO cardData = card.getCard();
 
@@ -84,7 +86,7 @@ public class CardController {
         @ApiResponse(responseCode = "404", description = "존재하지 않는 카드 ID",
             content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
-    public ResponseEntity<BaseResponse> delete(@PathVariable("card-id") String cardId){
+    public ResponseEntity<BaseResponse> deleteCard(@PathVariable("card-id") String cardId){
         Card findCard = cardService.findOne(cardId);
 
         // todo -> default 이미지일 때 삭제 X
@@ -104,7 +106,7 @@ public class CardController {
         @ApiResponse(responseCode = "404", description = "존재하지 않는 카드 ID",
             content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
-    public ResponseEntity<CardSerachResponse> search(@PathVariable("card-id") String cardId) {
+    public ResponseEntity<CardSerachResponse> searchCard(@PathVariable("card-id") String cardId) {
         Card card = cardService.findOne(cardId);
 
         CardFrontDTO cardFrontDTO = new CardFrontDTO(card.getId(), card.getBackground(),
@@ -125,7 +127,7 @@ public class CardController {
         @ApiResponse(responseCode = "400", description = "요청 값 속 유저 아이디 값 없음",
             content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
-    public ResponseEntity<WrittenCardResponse> cardList(
+    public ResponseEntity<WrittenCardResponse> getCardList(
         @RequestParam(value = "userId") String userId,
         @RequestParam(value = "list", defaultValue = "0", required = false) boolean list,
         @RequestParam(value = "offset", defaultValue = "0", required = false) Integer offset) {
@@ -181,7 +183,7 @@ public class CardController {
         @ApiResponse(responseCode ="404", description = "존재하지 않는 카드 ID",
             content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
-    public ResponseEntity<CardDetailResponse> getDetail(@PathVariable("card-id") String cardId){
+    public ResponseEntity<CardDetailResponse> getCardDetail(@PathVariable("card-id") String cardId){
         Card findCard = cardService.findOne(cardId);
 
         CardDTO card = new CardDTO(findCard.getId(), findCard.getBackground(), findCard.getTitle(),

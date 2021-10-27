@@ -20,8 +20,8 @@ public enum SuccessCode {
     LOAD_WRITTEN_CARD_SUCCESS(OK, "작성한 카드 리스트 조회 성공"),
     MODIFY_PRIORITY_SUCCESS(OK, "카드 우선순위 변경 성공"),
     LOAD_CARD_SUCCESS(OK, "명함 세부 조회 성공"),
-    MODIFY_GROUP_NAME_SUCCESS(OK, '그룹 명 변경 성공'),
-    DELETE_GROUP_SUCCESS(OK, '그룹 삭제 성공'),
+    MODIFY_GROUP_NAME_SUCCESS(OK, "그룹 명 변경 성공"),
+    DELETE_GROUP_SUCCESS(OK, "그룹 삭제 성공"),
 
     /* 201 - 자원 생성 */
     CREATE_GROUP_SUCCESS(OK,"그룹 추가 성공"),

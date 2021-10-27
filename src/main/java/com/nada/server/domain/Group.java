@@ -36,4 +36,10 @@ public class Group {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public static Group createGroup(String name){
+        Group group = new Group();
+        group.setName(name);
+        return group;
+    }
+
 }

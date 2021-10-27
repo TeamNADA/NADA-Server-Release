@@ -46,9 +46,12 @@ public class GroupService {
 
     /**
      * 그룹 삭제
+     * 존재하지 않으면 에러
      */
     @Transactional
     public void delete(Long groupId){
+        groupRepository.findById(groupId)
+            .orElseThrow(() -> new CustomException(ErrorCode.INVALID_GROUP_ID));
         groupRepository.deleteById(groupId);
     }
 

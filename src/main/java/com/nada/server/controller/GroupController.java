@@ -17,10 +17,13 @@ import java.io.IOException;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -50,24 +53,19 @@ public class GroupController {
         return new ResponseEntity(response, code.getHttpStatus());
     }
 
-    @ApiOperation(value = "그룹명 수정")
-    @PutMapping("/group")
+    @ApiOperation(value = "그룹 삭제")
+    @DeleteMapping("/group/{group-id}")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "그룹 추가 성공",
-            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
-        @ApiResponse(responseCode = "400", description = "요청 값 부족",
+        @ApiResponse(responseCode = "200", description = "그룹 삭제 성공",
             content = @Content(schema = @Schema(implementation = BaseResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 그룹",
             content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
-    public ResponseEntity<BaseResponse> modifyGroupName(@RequestBody @Valid ModifyGroupNameRequest request) {
-
-        groupService.changeName(request.getGroupId(), request.getGroupName());
-
-        SuccessCode code = SuccessCode.MODIFY_GROUP_NAME_SUCCESS;
+    public ResponseEntity<BaseResponse> deleteGroup(@PathVariable("group-id") Long groupId) {
+        groupService.delete(groupId);
+        SuccessCode code = SuccessCode.DELETE_GROUP_SUCCESS;
         BaseResponse response = new BaseResponse(code.getMsg());
         return new ResponseEntity(response, code.getHttpStatus());
-
     }
 
 }

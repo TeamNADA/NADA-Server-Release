@@ -45,13 +45,10 @@ public class CardService {
 
     /**
      * 카드 삭제
-     * 없다면 에러발생
      */
     @Transactional
-    public void delete(String cardId){
-        cardRepository.findById(cardId)
-            .orElseThrow(() -> new CustomException(ErrorCode.INVALID_CARD_ID));
-        cardRepository.deleteById(cardId);
+    public void delete(Card card){
+        cardRepository.delete(card);
     }
 
     /**

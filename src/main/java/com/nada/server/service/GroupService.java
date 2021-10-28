@@ -26,10 +26,9 @@ public class GroupService {
      */
     @Transactional
     public Long create(Group group, String userId){
-
-        validateGroupName(group.getName(), userId);
-
         User user = userRepository.findById(userId).get();
+
+        validateGroupName(group.getName(), user);
 
         group.setUser(user);
         groupRepository.save(group);
@@ -37,8 +36,8 @@ public class GroupService {
         return group.getId();
     }
 
-    private void validateGroupName(String groupName, String userId) {
-        List<Group> findGroups = groupRepository.findByNameAndUser_Id(groupName, userId);
+    private void validateGroupName(String groupName, User user) {
+        List<Group> findGroups = groupRepository.findByNameAndUser(groupName, user);
         if (!findGroups.isEmpty()) {
             throw new CustomException(ErrorCode.DUPLICATE_GROUP_NAME);
         }

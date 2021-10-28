@@ -67,9 +67,13 @@ public class GroupService {
 
     /**
      * 유저가 추가한 그룹 목록 조회
+     * 유저가 Unvalid하면 에러
      */
     public List<Group> findGroups(String userId){
-        return groupRepository.findByUserId(userId);
+        User findUser = userRepository.findById(userId)
+            .orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_USER));
+
+        return groupRepository.findByUser(findUser);
     }
 
 }

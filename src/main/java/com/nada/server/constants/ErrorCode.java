@@ -28,6 +28,10 @@ public enum ErrorCode {
     /* 405 - 잘못된 요청 */
     METHOD_NOT_SUPPORTED(METHOD_NOT_ALLOWED, "잘못된 요청입니다."),
 
+    /* 406 - 접근 불허용 */
+    CANNOT_DELETE_DEFAULT_GROUP(NOT_ACCEPTABLE, "미분류 그룹은 삭제할 수 없습니다"),
+    CANNOT_MODIFY_DEFAULT_GROUP(NOT_ACCEPTABLE, "미분류 그룹은 수정할 수 없습니다"),
+
     /* 409 - 중복 자원 존재 */
     DUPLICATE_GROUP_NAME(CONFLICT, "동일한 이름의 그룹이 존재합니다"),
     DUPLICATE_USER_ID(CONFLICT, "이미 존재하는 유저입니다."),

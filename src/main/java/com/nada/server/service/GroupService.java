@@ -46,21 +46,28 @@ public class GroupService {
     /**
      * 그룹 삭제
      * 존재하지 않으면 에러
+     * 미분류 그룹 삭제 불가
      */
     @Transactional
     public void delete(Long groupId){
-        groupRepository.findById(groupId)
+        Group findGroup = groupRepository.findById(groupId)
             .orElseThrow(() -> new CustomException(ErrorCode.INVALID_GROUP_ID));
+
+        if(findGroup.getName() == "미분류") throw new CustomException(ErrorCode.CANNOT_DELETE_DEFAULT_GROUP);
         groupRepository.deleteById(groupId);
     }
 
     /**
      * 그룹명 변경
+     * 존재하지 않으면 에러
+     * 미분류 그룹은 그룹명 변경 불가
      */
     @Transactional
     public void changeName(Long groupId, String groupName){
         Group findGroup = groupRepository.findById(groupId)
             .orElseThrow(() -> new CustomException(ErrorCode.INVALID_GROUP_ID));
+        if(findGroup.getName() == "미분류") throw new CustomException(ErrorCode.CANNOT_MODIFY_DEFAULT_GROUP);
+
         findGroup.setName(groupName);
     }
 

@@ -65,6 +65,8 @@ public class GroupController {
         @ApiResponse(responseCode = "200", description = "그룹 삭제 성공",
             content = @Content(schema = @Schema(implementation = BaseResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 그룹",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+        @ApiResponse(responseCode = "406", description = "미분류 그룹 삭제 불가",
             content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     public ResponseEntity<BaseResponse> deleteGroup(@PathVariable("group-id") Long groupId) {
@@ -79,6 +81,8 @@ public class GroupController {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "그룹 리스트 조회 성공",
             content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+        @ApiResponse(responseCode = "400", description = "요청 값 부족",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 유저",
             content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
@@ -90,6 +94,25 @@ public class GroupController {
 
         SuccessCode code = SuccessCode.LOAD_GROUP_LIST_SUCCESS;
         GroupListResponse response = new GroupListResponse(code.getMsg(), groups);
+        return new ResponseEntity(response, code.getHttpStatus());
+    }
+
+    @ApiOperation(value = "그룹명 수정")
+    @PutMapping("/group")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "그룹명 수정 성공",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+        @ApiResponse(responseCode = "400", description = "요청 값 부족",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 그룹",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+        @ApiResponse(responseCode = "406", description = "미분류 그룹 수정 불가",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    public ResponseEntity<BaseResponse> modifyGroupName(@RequestBody @Valid ModifyGroupNameRequest request) {
+        groupService.changeName(request.getGroupId(), request.getGroupName());
+        SuccessCode code = SuccessCode.MODIFY_GROUP_NAME_SUCCESS;
+        BaseResponse response = new BaseResponse(code.getMsg());
         return new ResponseEntity(response, code.getHttpStatus());
     }
 }

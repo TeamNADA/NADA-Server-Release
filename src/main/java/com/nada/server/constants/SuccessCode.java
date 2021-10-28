@@ -22,6 +22,7 @@ public enum SuccessCode {
     LOAD_CARD_SUCCESS(OK, "명함 세부 조회 성공"),
     MODIFY_GROUP_NAME_SUCCESS(OK, "그룹 명 변경 성공"),
     DELETE_GROUP_SUCCESS(OK, "그룹 삭제 성공"),
+    LOAD_GROUP_LIST_SUCCESS(OK, "그룹 리스트 조회 성공"),
 
     /* 201 - 자원 생성 */
     CREATE_GROUP_SUCCESS(OK,"그룹 추가 성공"),

@@ -1,7 +1,9 @@
 package com.nada.server.service;
 
+import com.nada.server.constants.ErrorCode;
 import com.nada.server.domain.Group;
 import com.nada.server.domain.User;
+import com.nada.server.exception.CustomException;
 import com.nada.server.repository.GroupRepository;
 import com.nada.server.repository.UserRepository;
 import java.util.List;
@@ -24,10 +26,9 @@ public class GroupService {
      */
     @Transactional
     public Long create(Group group, String userId){
-
-        validateGroupName(group.getName(), userId);
-
         User user = userRepository.findById(userId).get();
+
+        validateGroupName(group.getName(), user);
 
         group.setUser(user);
         groupRepository.save(group);
@@ -35,35 +36,50 @@ public class GroupService {
         return group.getId();
     }
 
-    private void validateGroupName(String groupName, String userId) {
-        List<Group> findGroups = groupRepository.findByNameAndUser_Id(groupName, userId);
+    private void validateGroupName(String groupName, User user) {
+        List<Group> findGroups = groupRepository.findByNameAndUser(groupName, user);
         if (!findGroups.isEmpty()) {
-            throw new IllegalStateException("이미 존재하는 그룹 이름입니다.");
+            throw new CustomException(ErrorCode.DUPLICATE_GROUP_NAME);
         }
     }
 
     /**
      * 그룹 삭제
+     * 존재하지 않으면 에러
+     * 미분류 그룹 삭제 불가
      */
     @Transactional
     public void delete(Long groupId){
+        Group findGroup = groupRepository.findById(groupId)
+            .orElseThrow(() -> new CustomException(ErrorCode.INVALID_GROUP_ID));
+
+        if(findGroup.getName() == "미분류") throw new CustomException(ErrorCode.CANNOT_DELETE_DEFAULT_GROUP);
         groupRepository.deleteById(groupId);
     }
 
     /**
      * 그룹명 변경
+     * 존재하지 않으면 에러
+     * 미분류 그룹은 그룹명 변경 불가
      */
     @Transactional
     public void changeName(Long groupId, String groupName){
-        Group findGroup = groupRepository.findById(groupId).get();
+        Group findGroup = groupRepository.findById(groupId)
+            .orElseThrow(() -> new CustomException(ErrorCode.INVALID_GROUP_ID));
+        if(findGroup.getName() == "미분류") throw new CustomException(ErrorCode.CANNOT_MODIFY_DEFAULT_GROUP);
+
         findGroup.setName(groupName);
     }
 
     /**
      * 유저가 추가한 그룹 목록 조회
+     * 유저가 Unvalid하면 에러
      */
     public List<Group> findGroups(String userId){
-        return groupRepository.findByUserId(userId);
+        User findUser = userRepository.findById(userId)
+            .orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_USER));
+
+        return groupRepository.findByUser(findUser);
     }
 
 }

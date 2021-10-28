@@ -41,7 +41,7 @@ public class GroupController {
     @ApiOperation(value = "그룹 추가")
     @PostMapping("/group")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "그룹 추가 성공",
+        @ApiResponse(responseCode = "201", description = "그룹 추가 성공",
             content = @Content(schema = @Schema(implementation = BaseResponse.class))),
         @ApiResponse(responseCode = "400", description = "요청 값 부족",
             content = @Content(schema = @Schema(implementation = BaseResponse.class))),
@@ -84,12 +84,11 @@ public class GroupController {
     })
     public ResponseEntity<BaseResponse> deleteGroup(@RequestParam(value = "userId") String userId) {
 
-        SuccessCode code = SuccessCode.LOAD_GROUP_LIST_SUCCESS;
-
         List<GroupListDTO> groups = groupService.findGroups(userId).stream()
             .map(group -> new GroupListDTO(group.getId(), group.getName()))
             .collect(Collectors.toList());
 
+        SuccessCode code = SuccessCode.LOAD_GROUP_LIST_SUCCESS;
         GroupListResponse response = new GroupListResponse(code.getMsg(), groups);
         return new ResponseEntity(response, code.getHttpStatus());
     }

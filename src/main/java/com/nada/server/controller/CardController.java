@@ -47,7 +47,9 @@ public class CardController {
     @ApiOperation(value = "카드 생성")
     @PostMapping("/card")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "카드 생성 성공",
+        @ApiResponse(responseCode = "201", description = "카드 생성 성공",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+        @ApiResponse(responseCode = "400", description = "요청 값 부족",
             content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     public ResponseEntity<BaseResponse> create(@ModelAttribute @Valid CreateCardRequest card) throws IOException {
@@ -168,6 +170,7 @@ public class CardController {
     })
     public ResponseEntity<BaseResponse> changeCardPriority(@RequestBody @Valid ChangePriorityDTO request){
         request.getOrdered().forEach(order -> cardService.changePriority(order.getCardId(), order.getPriority()));
+
         SuccessCode code = SuccessCode.MODIFY_PRIORITY_SUCCESS;
         BaseResponse response = new BaseResponse(code.getMsg());
         return new ResponseEntity(response, code.getHttpStatus());
@@ -189,8 +192,8 @@ public class CardController {
             findCard.getLinkName(), findCard.getLink(), findCard.getDescription(), findCard.getIsMincho(),
             findCard.getIsSoju(), findCard.getIsBoomuk(), findCard.getIsSauced(), findCard.getOneQuestion(),
             findCard.getOneAnswer(), findCard.getTwoQuestion(), findCard.getTwoAnswer());
-        SuccessCode code = SuccessCode.LOAD_CARD_SUCCESS;
 
+        SuccessCode code = SuccessCode.LOAD_CARD_SUCCESS;
         CardDetailResponse response = new CardDetailResponse(code.getMsg(), card);
         return new ResponseEntity(response, code.getHttpStatus());
     }

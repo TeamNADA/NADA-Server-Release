@@ -87,16 +87,35 @@ public class CardGroupService {
 
     /**
      * 그룹 변경 => 이러면 기존 그룹으로 바꾸려고 해도 OKAY
+     * 내가 만든 그룹이 아니면 에러
+     * 존재하지 않은 카드이면 에러
+     * 추가하지 않은 카드이면 에러
      */
     @Transactional
     public Long change(String cardId, Long groupId, String userId, Long newGroupId){
-        Group originGroup = groupRepository.findById(groupId).get();
-        Group newGroup = groupRepository.findById(newGroupId).get();
 
-        User findUser = userRepository.findById(userId).get();
-        Card findCard = cardRepository.findById(cardId).get();
+        User findUser = userRepository.findById(userId).orElseThrow(
+            () -> new CustomException(ErrorCode.UNAUTHORIZED_USER)
+        );
 
-        CardGroup cardGroup = cardGroupRepository.findByCardAndUserAndGroup(findCard, findUser, originGroup).get();
+        Group originGroup = groupRepository.findById(groupId).orElseThrow(
+            () -> new CustomException(ErrorCode.INVALID_GROUP_ID)
+        );;
+        Group newGroup = groupRepository.findById(newGroupId).orElseThrow(
+            () -> new CustomException(ErrorCode.INVALID_GROUP_ID)
+        );;
+
+        validateMyGroup(originGroup, findUser);
+        validateMyGroup(newGroup, findUser);
+
+        Card findCard = cardRepository.findById(cardId).orElseThrow(
+            () -> new CustomException(ErrorCode.INVALID_CARD_ID)
+        );
+
+
+        CardGroup cardGroup = cardGroupRepository.findByCardAndUserAndGroup(findCard, findUser, originGroup).orElseThrow(
+            () -> new CustomException(ErrorCode.INVALID_CARD_GROUP)
+        );
         cardGroup.setGroup(newGroup);
 
         return cardGroup.getId();
@@ -116,8 +135,12 @@ public class CardGroupService {
      * 그룹 속 카드 삭제
      */
     public void deleteCardFromGroup(String cardId, Long groupId){
-        Group findGroup = groupRepository.findById(groupId).get();
-        Card findCard = cardRepository.findById(cardId).get();
+        Group findGroup = groupRepository.findById(groupId).orElseThrow(
+            () -> new CustomException(ErrorCode.INVALID_GROUP_ID)
+        );
+        Card findCard = cardRepository.findById(cardId).orElseThrow(
+            () -> new CustomException(ErrorCode.INVALID_CARD_ID)
+        );
 
         cardGroupRepository.deleteByCardAndGroup(findCard, findGroup);
     }

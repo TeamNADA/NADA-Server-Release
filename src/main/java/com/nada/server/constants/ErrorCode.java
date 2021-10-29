@@ -24,6 +24,7 @@ public enum ErrorCode {
     /* 404 - 자원 존재하지 않음 */
     INVALID_CARD_ID(NOT_FOUND, "등록되지 않은 카드입니다."),
     INVALID_GROUP_ID(NOT_FOUND, "등록되지 않은 그룹입니다"),
+    INVALID_CARD_GROUP(NOT_FOUND, "그룹에 추가되지 않았던 카드입니다."),
 
     /* 405 - 잘못된 요청 */
     METHOD_NOT_SUPPORTED(METHOD_NOT_ALLOWED, "잘못된 요청입니다."),

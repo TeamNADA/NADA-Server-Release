@@ -26,7 +26,8 @@ public enum SuccessCode {
 
     /* 201 - 자원 생성 */
     CREATE_GROUP_SUCCESS(OK,"그룹 추가 성공"),
-    CREATE_CARD_SUCCESS(CREATED, "카드 생성 성공");
+    CREATE_CARD_SUCCESS(CREATED, "카드 생성 성공"),
+    CREATE_GROUP_CARD_SUCCESS(OK, "그룹 속 카드 추가 성공");
 
     private final HttpStatus httpStatus;
     private final String msg;

@@ -12,7 +12,7 @@ public enum ErrorCode {
 
     /* 400 - 잘못된 요청 */
     CANNOT_ADD_MY_CARD(BAD_REQUEST, "내가 작성한 카드는 추가할 수 없습니다."),
-
+    NOT_MY_GROUP(BAD_REQUEST, "내가 추가한 그룹이 아닙니다."),
     /* 401 - 인증 실패 */
     // token 관련
     INVALID_AUTH_TOKEN(UNAUTHORIZED, "권한 정보가 없는(잘못된) 토큰입니다"),
@@ -35,6 +35,7 @@ public enum ErrorCode {
     /* 409 - 중복 자원 존재 */
     DUPLICATE_GROUP_NAME(CONFLICT, "동일한 이름의 그룹이 존재합니다"),
     DUPLICATE_USER_ID(CONFLICT, "이미 존재하는 유저입니다."),
+    DUPLICATE_CARD_ID(CONFLICT, "이미 추가된 카드입니다."),
 
     /* 500 - 서버 에러 */
     SERVER_INTERNAL_ERROR(INTERNAL_SERVER_ERROR, "서버 내부 오류입니다.");

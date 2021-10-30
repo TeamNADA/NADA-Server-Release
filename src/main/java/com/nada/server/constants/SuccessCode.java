@@ -23,10 +23,14 @@ public enum SuccessCode {
     MODIFY_GROUP_NAME_SUCCESS(OK, "그룹 명 변경 성공"),
     DELETE_GROUP_SUCCESS(OK, "그룹 삭제 성공"),
     LOAD_GROUP_LIST_SUCCESS(OK, "그룹 리스트 조회 성공"),
+    DELETE_CARD_GROUP_SUCCESS(OK, "그룹 속 카드 삭제 성공"),
+    MODIFY_CARD_GROUP_SUCCESS(OK, "카드 속한 그룹 변경 성공"),
+    LOAD_CARD_GROUP_SUCCESS(OK, "그릅 속 카드 리스트 조회 성공"),
 
     /* 201 - 자원 생성 */
     CREATE_GROUP_SUCCESS(OK,"그룹 추가 성공"),
-    CREATE_CARD_SUCCESS(CREATED, "카드 생성 성공");
+    CREATE_CARD_SUCCESS(CREATED, "카드 생성 성공"),
+    CREATE_GROUP_CARD_SUCCESS(OK, "그룹 속 카드 추가 성공");
 
     private final HttpStatus httpStatus;
     private final String msg;

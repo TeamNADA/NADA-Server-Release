@@ -1,8 +1,11 @@
 package com.nada.server;
 
 import com.nada.server.domain.Card;
+import com.nada.server.domain.Group;
 import com.nada.server.domain.User;
+import com.nada.server.service.CardGroupService;
 import com.nada.server.service.CardService;
+import com.nada.server.service.GroupService;
 import com.nada.server.service.UserService;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,8 @@ public class InitDb {
 
         private final UserService userService;
         private final CardService cardService;
+        private final GroupService groupService;
+        private final CardGroupService cardGroupService;
 
         public void dbInit(){
 
@@ -67,6 +72,13 @@ public class InitDb {
             card1.setIsSoju(true);
             card1.setIsSauced(true);
             cardService.create(card1, "nada");
+
+            // 그룹 생성 - 상황 : nada2가 nada의 카드를 넣으려는 상황
+            Group group = Group.createGroup("Group");
+            groupService.create(group, "nada2");
+
+            // 그룹 속 카드 추가
+            cardGroupService.add("cardA", Long.valueOf(3), "nada2");
         }
 
 

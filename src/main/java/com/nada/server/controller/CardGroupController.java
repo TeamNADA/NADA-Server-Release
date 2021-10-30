@@ -2,8 +2,11 @@ package com.nada.server.controller;
 
 import com.nada.server.constants.SuccessCode;
 import com.nada.server.dto.BaseResponse;
+import com.nada.server.dto.payload.CardFrontDTO;
 import com.nada.server.dto.req.CreateCardGroupRequest;
 import com.nada.server.dto.req.ModifyCardGroupRequest;
+import com.nada.server.dto.res.CardGroupListResponse;
+import com.nada.server.dto.res.WrittenCardResponse;
 import com.nada.server.service.CardGroupService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,14 +14,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -88,6 +95,34 @@ public class CardGroupController {
 
         SuccessCode code = SuccessCode.MODIFY_CARD_GROUP_SUCCESS;
         BaseResponse response = new BaseResponse(code.getMsg());
+        return new ResponseEntity(response, code.getHttpStatus());
+    }
+
+    @ApiOperation(value = "그룹 속 카드 리스트 조회")
+    @GetMapping("/groups/cards")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "그룹 속 카드 리스트 조회 성공",
+            content = @Content(schema = @Schema(implementation = WrittenCardResponse.class))),
+        @ApiResponse(responseCode = "400", description = "요청 값 부족",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않은 그룹",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+
+    })
+    public ResponseEntity<CardGroupListResponse> groupCardList(
+        @RequestParam(value = "groupId") Long groupId,
+        @RequestParam(value = "offset", defaultValue = "0", required = false) Integer offset
+    ){
+
+        List<CardFrontDTO> cards = cardGroupService.findCardsByGroup(groupId, offset, 1).stream()
+            .map(card -> new CardFrontDTO(card.getId(), card.getBackground(), card.getTitle(),
+                card.getName(),
+                card.getBirthDate(), card.getAge(), card.getMbti(), card.getInstagram(),
+                card.getLinkName(), card.getLink(), card.getDescription()))
+            .collect(Collectors.toList());
+
+        SuccessCode code = SuccessCode.LOAD_CARD_GROUP_SUCCESS;
+        CardGroupListResponse response = new CardGroupListResponse(code.getMsg(), offset, cards);
         return new ResponseEntity(response, code.getHttpStatus());
     }
 }

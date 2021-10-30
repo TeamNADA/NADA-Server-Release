@@ -123,9 +123,12 @@ public class CardGroupService {
 
     /**
      * 그룹에 포함된 카드 목록 조회
+     * 존재하지 않은 그룹이면 에러
      */
     public List<Card> findCardsByGroup(Long groupId, int offset, int size){
-        Group findGroup = groupRepository.findById(groupId).get();
+        Group findGroup = groupRepository.findById(groupId).orElseThrow(
+            () -> new CustomException(ErrorCode.INVALID_GROUP_ID)
+        );;
 
         Pageable paging = PageRequest.of(offset, size, Sort.by("createDate").descending());
         return cardGroupSupportRepository.findCardsByGroup(findGroup, paging);

@@ -1,9 +1,4 @@
 spring:
-  datasource:
-    url: jdbc:h2:tcp://localhost/~/nada
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
   servlet:
     multipart:
       max-file-size: -1

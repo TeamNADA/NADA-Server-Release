@@ -18,8 +18,13 @@ public enum ErrorCode {
     INVALID_AUTH_TOKEN(UNAUTHORIZED, "권한 정보가 없는(잘못된) 토큰입니다"),
     INVALID_REFRESH_TOKEN(UNAUTHORIZED, "권한 정보가 없는(잘못된) 리프레시 토큰입니다"),
     EXPIRED_REFRESH_TOKEN(UNAUTHORIZED, "리프레시 토큰이 만료되었습니다."),
+
     // 로그인 관련
     UNAUTHORIZED_USER(UNAUTHORIZED, "등록된 유저 정보가 없습니다."),
+    UNAUTHORIZED_TOKEN(UNAUTHORIZED, "토큰을 함께 보내주세요."),
+
+    /* 403 - forbidden, 접근권한 존재하지 않음 */
+    FORBIDDEN_ACCESS(FORBIDDEN, "해당 요청에 접근할 권한이 아닙니다."),
 
     /* 404 - 자원 존재하지 않음 */
     INVALID_CARD_ID(NOT_FOUND, "등록되지 않은 카드입니다."),

@@ -13,6 +13,9 @@ public class User implements Persistable<String> {
     @Column(name = "user_id")
     private String id;
 
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
+
     // save 전 select문 없애기 위함
     @Transient
     private boolean isNew = true;

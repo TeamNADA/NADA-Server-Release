@@ -5,7 +5,9 @@ import com.nada.server.dto.BaseResponse;
 import com.nada.server.dto.payload.TokenDTO;
 import com.nada.server.dto.payload.UserTokenDTO;
 import com.nada.server.dto.req.LoginRequest;
+import com.nada.server.dto.req.ReissueRequest;
 import com.nada.server.dto.res.LoginResponse;
+import com.nada.server.dto.res.ReissuseResponse;
 import com.nada.server.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,7 +42,7 @@ public class UserController {
         @ApiResponse(responseCode = "401", description = "로그인 실패 - 등록된 유저가 아닙니다.",
             content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request){
         TokenDTO tokenDTO = userService.login(request.getUserId());
 
@@ -48,6 +51,16 @@ public class UserController {
         return new ResponseEntity(response, code.getHttpStatus());
     }
 
+    @PostMapping("/reissue")
+    public ResponseEntity<ReissuseResponse> reissue(@Valid @RequestBody ReissueRequest request){
+
+        TokenDTO tokenDTO = userService.reissue(request.getAccessToken(), request.getRefreshToken());
+        SuccessCode code = SuccessCode.REISSUE_SUCCESS;
+        ReissuseResponse response = new ReissuseResponse(code.getMsg(), tokenDTO.getAccessToken(),
+            tokenDTO.getRefreshToken());
+
+        return new ResponseEntity(response, code.getHttpStatus());
+    }
 
     @ApiOperation(value = "회원 탈퇴")
     @ApiResponses({

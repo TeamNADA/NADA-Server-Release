@@ -13,16 +13,14 @@ import com.nada.server.repository.RefreshTokenRepository;
 import com.nada.server.repository.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -39,6 +37,7 @@ public class UserService {
      * 로그인
      * 등록되어 있지 않으면 자동 회원가입 처리
      */
+    @Transactional
     public TokenDTO login(String id){
 
         Optional<User> user = userRepository.findById(id);
@@ -55,7 +54,7 @@ public class UserService {
             .value(tokenDTO.getRefreshToken())
             .build();
 
-        refreshTokenRepository.save(refreshToken);
+        RefreshToken save = refreshTokenRepository.save(refreshToken);
 
         return tokenDTO;
     }
@@ -89,5 +88,27 @@ public class UserService {
     }
 
 
+    public TokenDTO reissue(String accessToken, String refreshToken){
+        if(!tokenProvider.validateToken(refreshToken)){
+            throw new CustomException(ErrorCode.EXPIRED_REFRESH_TOKEN);
+        }
+
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+
+        RefreshToken rt = refreshTokenRepository.findByKey(authentication.getName())
+            .orElseThrow(() -> new CustomException(ErrorCode.LOGOUT_USER));
+
+        if(!rt.getValue().equals(refreshToken)){
+            throw new CustomException(ErrorCode.INVALID_REFRESH_TOKEN);
+        }
+
+        TokenDTO tokenDTO = tokenProvider.generateTokenDTO(authentication);
+
+        // 6. 저장소 정보 업데이트
+        RefreshToken newRefreshToken = rt.updateValue(tokenDTO.getRefreshToken());
+        refreshTokenRepository.save(newRefreshToken);
+
+        return tokenDTO;
+    }
 
 }

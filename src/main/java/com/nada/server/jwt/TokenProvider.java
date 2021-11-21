@@ -1,12 +1,12 @@
 package com.nada.server.jwt;
 
+import com.nada.server.constants.ErrorCode;
 import com.nada.server.dto.payload.TokenDTO;
+import com.nada.server.exception.CustomException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
@@ -30,8 +30,8 @@ import org.springframework.stereotype.Component;
 public class TokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "bearer";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60;            // 30min
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60*2;  // 7days
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 5 ;            // 5min
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;  // 30min
 
     private final Key key;
 
@@ -101,7 +101,7 @@ public class TokenProvider {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch(Exception e){
-            throw e;
+            throw new CustomException(ErrorCode.EXPIRED_REFRESH_TOKEN);
         }
     }
 

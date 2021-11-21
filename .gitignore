@@ -2,7 +2,7 @@
 /src/main/resources/aws.yml
 
 # db
-/src/main/resources/db.yml
+/src/main/resources/env.yml
 
 .DS_Store
 HELP.md

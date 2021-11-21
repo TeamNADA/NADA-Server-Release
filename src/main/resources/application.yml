@@ -17,5 +17,5 @@ spring:
     open-in-view: false
 
 logging.level:
-  org.hibernate.SQL: debug
+  org.hibernate.SQL: error
   #rg.hibernate.type: trace

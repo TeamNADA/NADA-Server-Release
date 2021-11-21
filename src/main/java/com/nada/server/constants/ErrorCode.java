@@ -15,7 +15,15 @@ public enum ErrorCode {
     NOT_MY_GROUP(BAD_REQUEST, "내가 추가한 그룹이 아닙니다."),
     /* 401 - 인증 실패 */
     // token 관련
-    INVALID_AUTH_TOKEN(UNAUTHORIZED, "권한 정보가 없는(잘못된) 토큰입니다"),
+    /* 401 - 인증 실패 */
+    // token 관련
+    WRONG_TYPE_TOKEN(UNAUTHORIZED, "잘못된 JWT 서명을 가진 토큰입니다."),
+    EXPIRED_TOKEN(UNAUTHORIZED, "만료된 JWT 토큰입니다."),
+    UNSUPPORTED_TOKEN(UNAUTHORIZED, "지원되지 않는 JWT 토큰입니다."),
+    WRONG_TOKEN(UNAUTHORIZED, "JWT 토큰이 잘못되었습니다."),
+    UNKNOWN_ERROR(UNAUTHORIZED, "알 수 없는 요청 인증 에러! 헤더에 토큰을 넣어 보냈는지 다시 한 번 확인해보세요."),
+    ACCESS_DENIED(UNAUTHORIZED, "접근이 거절되었습니다."),
+
     INVALID_REFRESH_TOKEN(UNAUTHORIZED, "권한 정보가 없는(잘못된) 리프레시 토큰입니다"),
     EXPIRED_REFRESH_TOKEN(UNAUTHORIZED, "리프레시 토큰이 만료되었습니다."),
 

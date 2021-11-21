@@ -1,12 +1,25 @@
 package com.nada.server.service;
 
+import com.nada.server.domain.Authority;
 import com.nada.server.domain.Group;
+import com.nada.server.domain.RefreshToken;
 import com.nada.server.domain.User;
+import com.nada.server.dto.payload.TokenDTO;
 import com.nada.server.exception.CustomException;
 import com.nada.server.constants.ErrorCode;
+import com.nada.server.jwt.TokenProvider;
 import com.nada.server.repository.GroupRepository;
+import com.nada.server.repository.RefreshTokenRepository;
 import com.nada.server.repository.UserRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,29 +28,46 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final TokenProvider tokenProvider;
+    private final RefreshTokenRepository refreshTokenRepository;
+
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
 
     /**
      * 로그인
-     * 등록되어 있지 않으면 회원가입 진행 요구
+     * 등록되어 있지 않으면 자동 회원가입 처리
      */
-    public String login(String id){
-        User findUser = userRepository.findById(id)
-            .orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_USER));
+    public TokenDTO login(String id){
 
-        return findUser.getId();
+        Optional<User> user = userRepository.findById(id);
+        if(!user.isPresent()) {
+            this.register(id);
+        }
+
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(new UsernamePasswordAuthenticationToken(id, ""));
+        TokenDTO tokenDTO = tokenProvider.generateTokenDTO(authentication);
+
+        // 4. RefreshToken 저장
+        RefreshToken refreshToken = RefreshToken.builder()
+            .key(authentication.getName())
+            .value(tokenDTO.getRefreshToken())
+            .build();
+
+        refreshTokenRepository.save(refreshToken);
+
+        return tokenDTO;
     }
 
     /**
-     * 회원가입 - 이미 존재하는 유저일 경우 에러
-     * 그룹 "미분류"도 default로 생성시킵니다.
+     * 회원가입
      */
     @Transactional
-    public String register(User user){
-        userRepository.findById(user.getId()).ifPresent( s -> {
-            throw new CustomException(ErrorCode.DUPLICATE_USER_ID);
-        });
+    public User register(String id){
+        User user = new User();
+        user.setId(id);
+        user.setAuthority(Authority.ROLE_USER);
 
         User saveUser = userRepository.save(user);
 
@@ -46,7 +76,7 @@ public class UserService {
         group.setName("미분류");
         groupRepository.save(group);
 
-        return saveUser.getId();
+        return saveUser;
     }
 
     /**

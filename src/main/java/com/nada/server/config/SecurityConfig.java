@@ -4,14 +4,11 @@ import com.nada.server.jwt.JwtAccessDeniedHandler;
 import com.nada.server.jwt.JwtAuthenticationDeniedHandler;
 import com.nada.server.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 // spring security의 가장 기본적인 설정.
 // JWT 를 사용하지 않더라도 이 설정은 기본으로 들어간다
@@ -22,12 +19,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationDeniedHandler jwtAuthenticationDeniedHandler;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     // h2 database 테스트가 원활하도록 관련 API 들은 전부 무시
     @Override
     public void configure(WebSecurity web) {
@@ -44,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .exceptionHandling()
             .authenticationEntryPoint(jwtAuthenticationDeniedHandler)
             .accessDeniedHandler(jwtAccessDeniedHandler)
+
 
             // h2-console 을 위한 설정을 추가
             .and()

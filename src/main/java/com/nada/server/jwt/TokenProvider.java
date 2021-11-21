@@ -72,8 +72,10 @@ public class TokenProvider {
             .build();
     }
 
-    // 직접 DB 를 조회한 것이 아니라 Access Token 에 있는 Member ID 를 꺼낸 거라서, 탈퇴로 인해 Member ID 가 DB 에 없는 경우 등 예외 상황은 Service 단에서 고려
+    // 직접 DB 를 조회한 것이 아니라 Access Token 에 있는 Member ID 를 꺼낸 것
+    // 탈퇴로 인해 Member ID 가 DB 에 없는 경우 등 예외 상황은 Service 단에서 고려
     public Authentication getAuthentication(String accessToken) {
+
         // 토큰 속 내용(정보) 꺼내기
         Claims claims = parseClaims(accessToken);
 
@@ -87,8 +89,7 @@ public class TokenProvider {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
-        // SecurityContext를 사용하기 위한 과정
-        // SecurityContext가 Authentication 객체 저장하기 때문
+        // SecurityContext 사용 위함
         UserDetails principal = new User(claims.getSubject(), "", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
@@ -99,16 +100,9 @@ public class TokenProvider {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
-        } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰입니다.");
-        } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.");
-        } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
+        } catch(Exception e){
+            throw e;
         }
-        return false;
     }
 
     private Claims parseClaims(String accessToken){

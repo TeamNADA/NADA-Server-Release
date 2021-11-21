@@ -1,8 +1,10 @@
 package com.nada.server;
 
+import com.nada.server.domain.Authority;
 import com.nada.server.domain.Card;
 import com.nada.server.domain.Group;
 import com.nada.server.domain.User;
+import com.nada.server.repository.UserRepository;
 import com.nada.server.service.CardGroupService;
 import com.nada.server.service.CardService;
 import com.nada.server.service.GroupService;
@@ -16,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class InitDb {
 
-
     private final InitService initService;
     @PostConstruct
     public void init() {
@@ -27,8 +28,7 @@ public class InitDb {
     @Transactional
     @RequiredArgsConstructor
     static class InitService {
-
-        private final UserService userService;
+        private final UserRepository userRepository;
         private final CardService cardService;
         private final GroupService groupService;
         private final CardGroupService cardGroupService;
@@ -38,11 +38,13 @@ public class InitDb {
             // 유저 생성
             User user1 = new User();
             user1.setId("nada");
-            userService.register(user1);
+            user1.setAuthority(Authority.ROLE_USER);
+            userRepository.save(user1);
 
             User user2 = new User();
             user2.setId("nada2");
-            userService.register(user2);
+            user2.setAuthority(Authority.ROLE_USER);
+            userRepository.save(user2);
 
             // 카드 생성
             Card card = new Card();
@@ -78,10 +80,11 @@ public class InitDb {
             groupService.create(group, "nada2");
 
             // 그룹 속 카드 추가
-            cardGroupService.add("cardA", Long.valueOf(3), "nada2");
+            cardGroupService.add("cardA", Long.valueOf(1), "nada2");
         }
 
 
     }
+
 
 }

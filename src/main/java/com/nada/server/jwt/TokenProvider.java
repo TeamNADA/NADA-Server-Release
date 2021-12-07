@@ -1,5 +1,7 @@
 package com.nada.server.jwt;
 
+import com.nada.server.commons.RedisUtil;
+import com.nada.server.commons.SecurityUtil;
 import com.nada.server.constants.ErrorCode;
 import com.nada.server.dto.payload.TokenDTO;
 import com.nada.server.exception.CustomException;
@@ -30,14 +32,16 @@ import org.springframework.stereotype.Component;
 public class TokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "bearer";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 5 ;            // 5min
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;  // 30min
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 14;            // 5min
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 2; //30;  // 30min
 
     private final Key key;
+    private final RedisUtil redisUtil;
 
-    public TokenProvider(@Value("${jwt.secret}") String secretKey){
+    public TokenProvider(@Value("${jwt.secret}") String secretKey, RedisUtil redisUtil){
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.redisUtil = redisUtil;
     }
 
     // Access Token 과 Refresh Token 을 생성
@@ -63,6 +67,8 @@ public class TokenProvider {
             .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
             .signWith(key, SignatureAlgorithm.HS512)
             .compact();
+
+        redisUtil.setDateExpire(authentication.getName(), refreshToken,REFRESH_TOKEN_EXPIRE_TIME);
 
         return TokenDTO.builder()
             .grantType(BEARER_TYPE)
@@ -101,7 +107,7 @@ public class TokenProvider {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch(Exception e){
-            throw new CustomException(ErrorCode.EXPIRED_REFRESH_TOKEN);
+            throw e;
         }
     }
 

@@ -1,15 +1,15 @@
 package com.nada.server.service;
 
+import com.nada.server.commons.RedisUtil;
+import com.nada.server.commons.SecurityUtil;
 import com.nada.server.domain.Authority;
 import com.nada.server.domain.Group;
-import com.nada.server.domain.RefreshToken;
 import com.nada.server.domain.User;
 import com.nada.server.dto.payload.TokenDTO;
 import com.nada.server.exception.CustomException;
 import com.nada.server.constants.ErrorCode;
 import com.nada.server.jwt.TokenProvider;
 import com.nada.server.repository.GroupRepository;
-import com.nada.server.repository.RefreshTokenRepository;
 import com.nada.server.repository.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +28,10 @@ public class UserService {
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
 
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final RedisUtil redisUtil;
 
     /**
      * 로그인
@@ -47,14 +47,6 @@ public class UserService {
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(new UsernamePasswordAuthenticationToken(id, ""));
         TokenDTO tokenDTO = tokenProvider.generateTokenDTO(authentication);
-
-        // 4. RefreshToken 저장
-        RefreshToken refreshToken = RefreshToken.builder()
-            .key(authentication.getName())
-            .value(tokenDTO.getRefreshToken())
-            .build();
-
-        RefreshToken save = refreshTokenRepository.save(refreshToken);
 
         return tokenDTO;
     }
@@ -85,28 +77,28 @@ public class UserService {
     public void unsubscribe(String id){
        userRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_USER));
        userRepository.deleteById(id);
+       redisUtil.deleteData(id);
     }
 
 
     public TokenDTO reissue(String accessToken, String refreshToken){
-        if(!tokenProvider.validateToken(refreshToken)){
+
+        try{
+            tokenProvider.validateToken(refreshToken);
+        } catch(Exception e){
             throw new CustomException(ErrorCode.EXPIRED_REFRESH_TOKEN);
         }
 
         Authentication authentication = tokenProvider.getAuthentication(accessToken);
 
-        RefreshToken rt = refreshTokenRepository.findByKey(authentication.getName())
+        String rt = redisUtil.getData( authentication.getName())
             .orElseThrow(() -> new CustomException(ErrorCode.LOGOUT_USER));
 
-        if(!rt.getValue().equals(refreshToken)){
+        if(!rt.equals(refreshToken)){
             throw new CustomException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         TokenDTO tokenDTO = tokenProvider.generateTokenDTO(authentication);
-
-        // 6. 저장소 정보 업데이트
-        RefreshToken newRefreshToken = rt.updateValue(tokenDTO.getRefreshToken());
-        refreshTokenRepository.save(newRefreshToken);
 
         return tokenDTO;
     }

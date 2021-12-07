@@ -117,8 +117,8 @@ public class CardGroupController {
         List<CardFrontDTO> cards = cardGroupService.findCardsByGroup(groupId, offset, 1).stream()
             .map(card -> new CardFrontDTO(card.getId(), card.getBackground(), card.getTitle(),
                 card.getName(),
-                card.getBirthDate(), card.getAge(), card.getMbti(), card.getInstagram(),
-                card.getLinkName(), card.getLink(), card.getDescription()))
+                card.getBirthDate(), card.getMbti(), card.getInstagram(),
+                card.getLink(), card.getDescription()))
             .collect(Collectors.toList());
 
         SuccessCode code = SuccessCode.LOAD_CARD_GROUP_SUCCESS;

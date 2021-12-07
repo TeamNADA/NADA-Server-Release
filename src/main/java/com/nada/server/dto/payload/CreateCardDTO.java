@@ -21,7 +21,6 @@ public class CreateCardDTO {
     private String mbti;
 
     private String instagram;
-    private String linkName;
     private String link;
     private String description;
 
@@ -34,8 +33,7 @@ public class CreateCardDTO {
     @NotNull(message = "양냠후라이도 여부는 필수입니다")
     private Boolean isSauced;
 
-    private String oneQuestion;
-    private String oneAnswer;
-    private String twoQuestion;
-    private String twoAnswer;
+    private String oneTmi;
+    private String twoTmi;
+    private String threeTmi;
 }

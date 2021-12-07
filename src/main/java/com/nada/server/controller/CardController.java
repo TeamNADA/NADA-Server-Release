@@ -62,7 +62,7 @@ public class CardController {
         Integer isDefault = card.getCard().getDefaultImage();
         String imageURL;
 
-        if(isDefault == 0){
+        if(isDefault == 0 && card.getImage() != null){
             imageURL = s3Utils.upload(card.getImage());
         }else{
             // 지정 이미지
@@ -70,9 +70,11 @@ public class CardController {
         }
 
         Card newCard = Card.createCard(imageURL, cardData.getBirthDate(), cardData.getTitle(),
-            cardData.getName(), cardData.getMbti(), cardData.getInstagram(), cardData.getLinkName(), cardData.getLink(), cardData.getDescription(),
-            cardData.getIsMincho(), cardData.getIsSoju(), cardData.getIsBoomuk(),cardData.getIsSauced(), cardData.getOneQuestion(),
-            cardData.getOneAnswer(), cardData.getTwoQuestion(), cardData.getTwoAnswer());
+            cardData.getName(), cardData.getMbti(), cardData.getInstagram() == null ? "" : cardData.getInstagram(),
+            cardData.getLink() == null ? "" : cardData.getLink(), cardData.getDescription() == null ? "" : cardData.getDescription(),
+            cardData.getIsMincho(), cardData.getIsSoju(), cardData.getIsBoomuk(),cardData.getIsSauced(),
+            cardData.getOneTmi() == null ? "" : cardData.getOneTmi(), cardData.getTwoTmi() == null ? "" : cardData.getTwoTmi(),
+            cardData.getThreeTmi() == null ? "" : cardData.getThreeTmi());
 
         cardService.create(newCard, cardData.getUserId());
 
@@ -114,7 +116,7 @@ public class CardController {
 
         CardFrontDTO cardFrontDTO = new CardFrontDTO(card.getId(), card.getBackground(),
             card.getTitle(), card.getName(), card.getBirthDate(),
-            card.getAge(), card.getMbti(), card.getInstagram(), card.getLinkName(), card.getLink(),
+            card.getMbti(), card.getInstagram(), card.getLink(),
             card.getDescription());
 
         SuccessCode code = SuccessCode.SEARCH_CARD_SUCCESS;
@@ -144,16 +146,15 @@ public class CardController {
             findCards = cardService.findCards(userId, offset, 1);
             List<CardDTO> cards = findCards.stream()
                 .map(card -> new CardDTO(card.getId(), card.getBackground(), card.getTitle(),
-                    card.getName(), card.getBirthDate(), card.getAge(), card.getMbti(), card.getInstagram(),
-                    card.getLinkName(), card.getLink(), card.getDescription(), card.getIsMincho(), card.getIsSoju(),
-                    card.getIsBoomuk(), card.getIsSauced(), card.getOneQuestion(), card.getOneAnswer(),
-                    card.getTwoQuestion(), card.getTwoAnswer()))
+                    card.getName(), card.getBirthDate(), card.getMbti(), card.getInstagram(),
+                    card.getLink(), card.getDescription(), card.getIsMincho(), card.getIsSoju(),
+                    card.getIsBoomuk(), card.getIsSauced(), card.getOneTmi(), card.getTwoTmi(), card.getThreeTmi()))
                 .collect(Collectors.toList());
             response = new WrittenCardResponse(code.getMsg(), offset, cards, null);
         }else{
             findCards = cardService.findCards(userId);
             List<CardDateDTO> cardDates = findCards.stream()
-                .map(card -> new CardDateDTO(card.getId(), card.getTitle(), card.getBirthDate()))
+                .map(card -> new CardDateDTO(card.getId(), card.getTitle()))
                 .collect(Collectors.toList());
             response = new WrittenCardResponse(code.getMsg(), null,null, cardDates);
         }
@@ -190,13 +191,10 @@ public class CardController {
     public ResponseEntity<CardDetailResponse> getCardDetail(@PathVariable("card-id") String cardId){
         Card findCard = cardService.findOne(cardId);
 
-        log.info("상세조회 "+ SecurityUtil.getCurrentMemberId());
-
         CardDTO card = new CardDTO(findCard.getId(), findCard.getBackground(), findCard.getTitle(),
-            findCard.getName(), findCard.getBirthDate(), findCard.getAge(), findCard.getMbti(), findCard.getInstagram(),
-            findCard.getLinkName(), findCard.getLink(), findCard.getDescription(), findCard.getIsMincho(),
-            findCard.getIsSoju(), findCard.getIsBoomuk(), findCard.getIsSauced(), findCard.getOneQuestion(),
-            findCard.getOneAnswer(), findCard.getTwoQuestion(), findCard.getTwoAnswer());
+            findCard.getName(), findCard.getBirthDate(), findCard.getMbti(), findCard.getInstagram(),
+            findCard.getLink(), findCard.getDescription(), findCard.getIsMincho(), findCard.getIsSoju(),
+            findCard.getIsBoomuk(), findCard.getIsSauced(), findCard.getOneTmi(), findCard.getTwoTmi(), findCard.getThreeTmi());
 
         SuccessCode code = SuccessCode.LOAD_CARD_SUCCESS;
         CardDetailResponse response = new CardDetailResponse(code.getMsg(), card);

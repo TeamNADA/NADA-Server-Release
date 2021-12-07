@@ -34,13 +34,10 @@ public class Card implements Persistable<String> {
     private String title;
     private String name;
 
-    private String age;
     private String mbti;
 
     @Builder.Default
     private String instagram = "";
-    @Builder.Default
-    private String linkName = "";
     @Builder.Default
     private String link = "";
     @Builder.Default
@@ -52,13 +49,11 @@ public class Card implements Persistable<String> {
     private Boolean isSauced;
 
     @Builder.Default
-    private String oneQuestion = "";
+    private String oneTmi = "";
     @Builder.Default
-    private String oneAnswer = "";
+    private String twoTmi = "";
     @Builder.Default
-    private String twoQuestion = "";
-    @Builder.Default
-    private String twoAnswer = "";
+    private String threeTmi = "";
 
     private Integer priority;
 
@@ -70,9 +65,9 @@ public class Card implements Persistable<String> {
     private User user;
 
     public static Card createCard(String background, String birthDate, String title, String name, String mbti,
-        String instagram, String linkName, String link, String description, Boolean isMincho,
-        Boolean isSoju, Boolean isBoomuk, Boolean isSauced, String oneQuestion,
-        String oneAnswer, String twoQuestion, String twoAnswer) {
+        String instagram, String link, String description, Boolean isMincho,
+        Boolean isSoju, Boolean isBoomuk, Boolean isSauced, String oneTmi,
+        String twoTmi, String threeTmi) {
 
         Card card = new Card();
 
@@ -84,18 +79,16 @@ public class Card implements Persistable<String> {
         // birthdate 파싱하여 age값 세팅
         Calendar current = Calendar.getInstance();
         int currentYear  = current.get(Calendar.YEAR);
-        String temp = birthDate.split("/")[0];
+        String temp = birthDate.split("\\.")[0];
         int birthYear = Integer.parseInt(temp);
-        card.setAge((currentYear-birthYear+1) +"세");
 
         card.setBackground(background);
-        card.setBirthDate(birthDate);
+        card.setBirthDate(birthDate+String.format(" (%d)", currentYear-birthYear+1));
         card.setTitle(title);
         card.setName(name);
         card.setMbti(mbti);
 
         card.setInstagram(instagram);
-        card.setLinkName(linkName);
         card.setLink(link);
         card.setDescription(description);
 
@@ -104,10 +97,9 @@ public class Card implements Persistable<String> {
         card.setIsBoomuk(isBoomuk);
         card.setIsSauced(isSauced);
 
-        card.setOneQuestion(oneQuestion);
-        card.setOneAnswer(oneAnswer);
-        card.setTwoQuestion(twoQuestion);
-        card.setTwoAnswer(twoAnswer);
+        card.setOneTmi(oneTmi);
+        card.setTwoTmi(twoTmi);
+        card.setThreeTmi(threeTmi);
 
         return card;
     }

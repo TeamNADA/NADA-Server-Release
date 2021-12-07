@@ -40,7 +40,6 @@ public class JwtFilter extends OncePerRequestFilter {
         try{
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 Authentication authentication = tokenProvider.getAuthentication(jwt);
-                log.info("security context 저장 userEmail " + authentication.getName());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {

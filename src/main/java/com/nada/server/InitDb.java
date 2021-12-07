@@ -52,8 +52,7 @@ public class InitDb {
             card.setBackground("사진파일 어쩌구");
             card.setTitle("명함이름이여");
             card.setName("내 이름이여");
-            card.setBirthDate("1999/05/12");
-            card.setAge("23세");
+            card.setBirthDate("1999.05.12 (23)");
             card.setMbti("ENFP");
             card.setIsMincho(true);
             card.setIsBoomuk(false);
@@ -66,8 +65,7 @@ public class InitDb {
             card1.setBackground("파일더미가");
             card1.setTitle("나다 수석졸업생");
             card1.setName("예원이여");
-            card1.setBirthDate("1967/06/21");
-            card1.setAge("1004세");
+            card1.setBirthDate("1967.06.21 (1004)");
             card1.setMbti("ISTJ");
             card1.setIsMincho(false);
             card1.setIsBoomuk(false);

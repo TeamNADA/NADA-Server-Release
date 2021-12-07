@@ -11,10 +11,8 @@ public class CardDTO {
     private String title;
     private String name;
     private String birthDate;
-    private String age;
     private String mbti;
     private String instagram;
-    private String linkName;
     private String link;
     private String description;
 
@@ -23,8 +21,7 @@ public class CardDTO {
     private Boolean isBoomuk;
     private Boolean isSauced;
 
-    private String oneQuestion;
-    private String oneAnswer;
-    private String twoQuestion;
-    private String twoAnswer;
+    private String oneTmi;
+    private String twoTmi;
+    private String threeTmi;
 }

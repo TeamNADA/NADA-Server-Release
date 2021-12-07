@@ -8,5 +8,4 @@ import lombok.Data;
 public class CardDateDTO {
     private String cardId;
     private String title;
-    private String createDate;
 }

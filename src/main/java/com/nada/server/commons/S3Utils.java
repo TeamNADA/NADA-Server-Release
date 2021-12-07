@@ -3,7 +3,9 @@ package com.nada.server.commons;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.util.IOUtils;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,10 +24,16 @@ public class S3Utils {
     public String bucket;
 
     public String upload(MultipartFile file) throws IOException {
+        // set ObjectMatadata
+        byte[] bytes = IOUtils.toByteArray(file.getInputStream());
+
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(bytes.length);
+        objectMetadata.setContentType(file.getContentType());
 
         String fileName = LocalDateTime.now().format(formatter);
 
-        amazonS3Client.putObject(new PutObjectRequest(bucket, "cards/"+fileName, file.getInputStream(), null)
+        amazonS3Client.putObject(new PutObjectRequest(bucket, "cards/"+fileName, file.getInputStream(), objectMetadata)
             .withCannedAcl(CannedAccessControlList.PublicRead));
         return amazonS3Client.getUrl(bucket, "cards/"+fileName).toString();
     }

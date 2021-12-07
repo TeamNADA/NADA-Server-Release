@@ -16,6 +16,8 @@ spring:
         format_sql: true
     open-in-view: false
 
-logging.level:
-  org.hibernate.SQL: error
+logging:
+  level:
+    root : info
+    org.hibernate.SQL: warn
   #rg.hibernate.type: trace

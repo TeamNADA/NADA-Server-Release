@@ -1,6 +1,7 @@
 package com.nada.server.controller;
 
 import com.nada.server.commons.S3Utils;
+import com.nada.server.commons.SecurityUtil;
 import com.nada.server.constants.SuccessCode;
 import com.nada.server.domain.Card;
 import com.nada.server.dto.BaseResponse;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "카드 API")
@@ -186,6 +189,8 @@ public class CardController {
     })
     public ResponseEntity<CardDetailResponse> getCardDetail(@PathVariable("card-id") String cardId){
         Card findCard = cardService.findOne(cardId);
+
+        log.info("상세조회 "+ SecurityUtil.getCurrentMemberId());
 
         CardDTO card = new CardDTO(findCard.getId(), findCard.getBackground(), findCard.getTitle(),
             findCard.getName(), findCard.getBirthDate(), findCard.getAge(), findCard.getMbti(), findCard.getInstagram(),

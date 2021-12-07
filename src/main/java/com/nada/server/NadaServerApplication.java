@@ -10,7 +10,7 @@ public class NadaServerApplication {
 	public static final String APPLICATION_LOCATIONS =
 		"spring.config.location="
 			+ "classpath:application.yml,"
-			+ "classpath:db.yml,"
+			+ "classpath:env.yml,"
 			+ "classpath:aws.yml";
 
 	public static void main(String[] args) {

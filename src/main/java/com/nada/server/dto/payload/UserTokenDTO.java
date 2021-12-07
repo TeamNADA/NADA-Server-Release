@@ -7,13 +7,11 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserTokenDTO {
     private String userId;
-    private String accessToken;
-    private String refreshToken;
+    private TokenDTO token;
 
-    public UserTokenDTO(String userId, String accessToken, String refreshToken) {
+    public UserTokenDTO(String userId, TokenDTO tokenDTO) {
         this.userId = userId;
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
+        this.token = tokenDTO;
     }
 
     public UserTokenDTO(String userId) {

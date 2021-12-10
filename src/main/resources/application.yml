@@ -7,17 +7,8 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
-  jpa:
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        default_batch_fetch_size: 100
-        format_sql: true
-    open-in-view: false
+  profiles:
+    group:
+      "local": "local, common"
+      "prod": "prod, common"
 
-logging:
-  level:
-    root : info
-    org.hibernate.SQL: warn
-  #rg.hibernate.type: trace

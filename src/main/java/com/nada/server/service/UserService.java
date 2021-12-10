@@ -80,7 +80,9 @@ public class UserService {
        redisUtil.deleteData(id);
     }
 
-
+    /**
+     * access token, refresh token 재발급
+     */
     public TokenDTO reissue(String accessToken, String refreshToken){
 
         try{

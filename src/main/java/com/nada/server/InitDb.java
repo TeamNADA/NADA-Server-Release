@@ -74,7 +74,7 @@ public class InitDb {
             cardService.create(card1, "nada");
 
             // 그룹 생성 - 상황 : nada2가 nada의 카드를 넣으려는 상황
-            Group group = Group.createGroup("Group");
+            Group group = Group.createGroup("미분류");
             groupService.create(group, "nada2");
 
             // 그룹 속 카드 추가

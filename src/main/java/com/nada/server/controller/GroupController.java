@@ -1,5 +1,6 @@
 package com.nada.server.controller;
 
+import com.nada.server.commons.SecurityUtil;
 import com.nada.server.constants.SuccessCode;
 import com.nada.server.domain.Group;
 import com.nada.server.dto.BaseResponse;
@@ -112,6 +113,23 @@ public class GroupController {
     public ResponseEntity<BaseResponse> modifyGroupName(@RequestBody @Valid ModifyGroupNameRequest request) {
         groupService.changeName(request.getGroupId(), request.getGroupName());
         SuccessCode code = SuccessCode.MODIFY_GROUP_NAME_SUCCESS;
+        BaseResponse response = new BaseResponse(code.getMsg());
+        return new ResponseEntity(response, code.getHttpStatus());
+    }
+
+    @ApiOperation(value = "받은 명함 초기화")
+    @DeleteMapping("/groups")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "받은 명함 초기화 성공",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+        @ApiResponse(responseCode = "401", description = "등록되지 않은 유저 정보",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+    })
+    public ResponseEntity<BaseResponse> deleteAllGroups(){
+        String memberId = SecurityUtil.getCurrentMemberId();
+        groupService.deleteAllGroups(memberId);
+
+        SuccessCode code = SuccessCode.RE_INIT_GROUPS_SUCCESS;
         BaseResponse response = new BaseResponse(code.getMsg());
         return new ResponseEntity(response, code.getHttpStatus());
     }

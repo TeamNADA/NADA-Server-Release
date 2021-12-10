@@ -1,6 +1,8 @@
 package com.nada.server.service;
 
+import com.nada.server.constants.AnimalYearTable;
 import com.nada.server.constants.ErrorCode;
+import com.nada.server.constants.MBTITable;
 import com.nada.server.domain.Card;
 import com.nada.server.domain.User;
 import com.nada.server.exception.CustomException;
@@ -87,5 +89,40 @@ public class CardService {
     public void changePriority(String cardId, int priority){
         Card card = cardRepository.findById(cardId).orElseThrow(() -> new CustomException(ErrorCode.INVALID_CARD_ID));
         card.setPriority(priority);
+    }
+
+    /**
+     * 카드 간 궁합 조회
+     */
+    public int getHarmony(String myCardId, String yourCardId){
+        Card myCard = cardRepository.findById(myCardId).orElseThrow(() -> new CustomException(ErrorCode.INVALID_CARD_ID));
+        Card yourCard = cardRepository.findById(yourCardId).orElseThrow(() -> new CustomException(ErrorCode.INVALID_CARD_ID));
+
+        int mbtiHarmony = MBTITable.getHarmony(myCard.getMbti(), yourCard.getMbti());
+        int animalYearHarmony = AnimalYearTable.getHarmony(myCard.getBirthDate(), yourCard.getBirthDate());
+
+        int sameTasteNum = 0;
+        sameTasteNum += ( myCard.getIsSoju() == yourCard.getIsSoju() ? 1:0 ) + (myCard.getIsSauced() == yourCard.getIsSauced() ? 1:0)
+            + ( myCard.getIsBoomuk() == yourCard.getIsBoomuk() ? 1:0) + (myCard.getIsMincho()== yourCard.getIsMincho() ? 1:0);
+
+        int tasteHarmony;
+        switch(sameTasteNum){
+            case 0:
+                tasteHarmony = -30;
+                break;
+            case 1:
+                tasteHarmony = -22;
+                break;
+            case 2:
+                tasteHarmony = -15;
+                break;
+            case 3:
+                tasteHarmony = -8;
+                break;
+            case 4: default:
+                tasteHarmony = 0;
+                break;
+        }
+        return 100 + mbtiHarmony + animalYearHarmony + tasteHarmony;
     }
 }

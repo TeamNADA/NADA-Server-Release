@@ -13,6 +13,7 @@ import com.nada.server.dto.req.ChangePriorityDTO;
 import com.nada.server.dto.req.CreateCardRequest;
 import com.nada.server.dto.res.CardDetailResponse;
 import com.nada.server.dto.res.CardSerachResponse;
+import com.nada.server.dto.res.GetHarmonyResponse;
 import com.nada.server.dto.res.WrittenCardResponse;
 import com.nada.server.service.CardService;
 import io.swagger.annotations.Api;
@@ -200,4 +201,20 @@ public class CardController {
         CardDetailResponse response = new CardDetailResponse(code.getMsg(), card);
         return new ResponseEntity(response, code.getHttpStatus());
     }
+
+    @ApiOperation(value = "명함 궁합 조회")
+    @GetMapping("/card/util")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "명함 궁합 조회 성공",
+            content = @Content(schema = @Schema(implementation = GetHarmonyResponse.class))),
+        @ApiResponse(responseCode ="404", description = "존재하지 않는 카드 ID",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    public ResponseEntity<GetHarmonyResponse> getHarmony(@RequestParam("myCard") String myCardId, @RequestParam("yourCard") String yourCardId){
+        int harmony = cardService.getHarmony(myCardId, yourCardId);
+        SuccessCode code = SuccessCode.GET_HARMONY_SUCCESS;
+        GetHarmonyResponse response = new GetHarmonyResponse(code.getMsg(), harmony);
+        return new ResponseEntity(response, code.getHttpStatus());
+    }
+
 }

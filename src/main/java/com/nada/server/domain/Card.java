@@ -75,15 +75,8 @@ public class Card implements Persistable<String> {
         String cardId = UUID.randomUUID().toString().replaceAll("-", ""); // -를 제거해 주었다.
         cardId = cardId.substring(0, 10).toUpperCase();
         card.setId(cardId);
-
-        // birthdate 파싱하여 age값 세팅
-        Calendar current = Calendar.getInstance();
-        int currentYear  = current.get(Calendar.YEAR);
-        String temp = birthDate.split("\\.")[0];
-        int birthYear = Integer.parseInt(temp);
-
         card.setBackground(background);
-        card.setBirthDate(birthDate+String.format(" (%d)", currentYear-birthYear+1));
+        card.setBirthDate(birthDate);
         card.setTitle(title);
         card.setName(name);
         card.setMbti(mbti);

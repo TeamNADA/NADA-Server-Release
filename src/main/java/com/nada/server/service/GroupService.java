@@ -82,4 +82,21 @@ public class GroupService {
         return groupRepository.findByUser(findUser);
     }
 
+    /**
+     * 받은 명함 초기화 (= 모든 그룹 삭제)
+     * 미분류 그룹은 다시 추가해줍니다.
+     */
+    @Transactional
+    public void deleteAllGroups(String id){
+        User findUser = userRepository.findById(id).orElseThrow(
+            () -> new CustomException(ErrorCode.UNAUTHORIZED_USER)
+        );
+        groupRepository.deleteAllByUserId(id);
+
+        Group group = new Group();
+        group.setUser(findUser);
+        group.setName("미분류");
+        groupRepository.save(group);
+    }
+
 }

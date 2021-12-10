@@ -1,7 +1,6 @@
 package com.nada.server.controller;
 
 import com.nada.server.commons.S3Utils;
-import com.nada.server.commons.SecurityUtil;
 import com.nada.server.constants.SuccessCode;
 import com.nada.server.domain.Card;
 import com.nada.server.dto.BaseResponse;

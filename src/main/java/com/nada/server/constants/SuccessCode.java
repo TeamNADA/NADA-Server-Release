@@ -28,6 +28,7 @@ public enum SuccessCode {
     LOAD_CARD_GROUP_SUCCESS(OK, "그릅 속 카드 리스트 조회 성공"),
     REISSUE_SUCCESS(OK, "토큰 재발급 성공"),
     GET_HARMONY_SUCCESS(OK, "카드 궁합 조회 성공"),
+    RE_INIT_GROUPS_SUCCESS(OK, "받은 명함 초기화 성공"),
 
     /* 201 - 자원 생성 */
     CREATE_GROUP_SUCCESS(OK,"그룹 추가 성공"),

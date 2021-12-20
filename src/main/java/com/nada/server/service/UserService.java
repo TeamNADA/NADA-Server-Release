@@ -52,6 +52,14 @@ public class UserService {
     }
 
     /**
+     * 로그아웃
+     */
+    public void logout(String id){
+        userRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_USER));
+        redisUtil.deleteData(id);
+    }
+
+    /**
      * 회원가입
      */
     @Transactional

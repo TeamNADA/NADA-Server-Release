@@ -76,6 +76,22 @@ public class UserController {
         return new ResponseEntity(response, code.getHttpStatus());
     }
 
+    @ApiOperation(value = "로그아웃")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "로그아웃 성공",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+        @ApiResponse(responseCode = "401", description = "로그아웃 실패 - 존재하지 않는 유저입니다.",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+    })
+    @DeleteMapping("/auth/logout")
+    public ResponseEntity<BaseResponse> logout(){
+        String memberId = SecurityUtil.getCurrentMemberId();
+        userService.logout(memberId);
+
+        SuccessCode code = SuccessCode.LOGOUT_SUCCESS;
+        BaseResponse response = new BaseResponse(code.getMsg());
+        return new ResponseEntity(response, code.getHttpStatus());
+    }
 
 
 }

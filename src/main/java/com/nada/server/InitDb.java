@@ -79,6 +79,19 @@ public class InitDb {
 
             // 그룹 속 카드 추가
             cardGroupService.add("cardA", Long.valueOf(1), "nada2");
+
+            Card card2 = new Card();
+            card2.setId("cardC");
+            card2.setBackground("백,,,,");
+            card2.setTitle("호로롤");
+            card2.setName("나다2카드");
+            card2.setBirthDate("1950.06.21");
+            card2.setMbti("ENFP");
+            card2.setIsMincho(false);
+            card2.setIsBoomuk(false);
+            card2.setIsSoju(true);
+            card2.setIsSauced(true);
+            cardService.create(card2, "nada2");
         }
 
 

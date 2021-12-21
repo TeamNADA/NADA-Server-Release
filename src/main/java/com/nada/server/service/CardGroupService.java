@@ -137,6 +137,7 @@ public class CardGroupService {
     /**
      * 그룹 속 카드 삭제
      */
+    @Transactional
     public void deleteCardFromGroup(String cardId, Long groupId){
         Group findGroup = groupRepository.findById(groupId).orElseThrow(
             () -> new CustomException(ErrorCode.INVALID_GROUP_ID)

@@ -1,5 +1,6 @@
 package com.nada.server.controller;
 
+import com.nada.server.commons.SecurityUtil;
 import com.nada.server.constants.SuccessCode;
 import com.nada.server.dto.BaseResponse;
 import com.nada.server.dto.payload.TokenDTO;
@@ -19,18 +20,14 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "사용자 API")
-@RequestMapping("/auth")
 public class UserController {
 
     private final UserService userService;
@@ -42,7 +39,7 @@ public class UserController {
         @ApiResponse(responseCode = "401", description = "로그인 실패 - 등록된 유저가 아닙니다.",
             content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request){
         TokenDTO tokenDTO = userService.login(request.getUserId());
 
@@ -51,7 +48,7 @@ public class UserController {
         return new ResponseEntity(response, code.getHttpStatus());
     }
 
-    @PostMapping("/reissue")
+    @PostMapping("/auth/reissue")
     public ResponseEntity<ReissuseResponse> reissue(@Valid @RequestBody ReissueRequest request){
 
         TokenDTO tokenDTO = userService.reissue(request.getAccessToken(), request.getRefreshToken());
@@ -69,15 +66,32 @@ public class UserController {
         @ApiResponse(responseCode = "401", description = "회원 탈퇴 실패 - 존재하지 않는 유저입니다.",
             content = @Content(schema = @Schema(implementation = BaseResponse.class))),
     })
-    @DeleteMapping("/{user-id}")
-    public ResponseEntity<BaseResponse> deleteUser(@PathVariable("user-id") String id){
-        userService.unsubscribe(id);
+    @DeleteMapping("/user")
+    public ResponseEntity<BaseResponse> deleteUser(){
+        String memberId = SecurityUtil.getCurrentMemberId();
+        userService.unsubscribe(memberId);
 
         SuccessCode code = SuccessCode.UNSUBSCRIBE_SUCCESS;
         BaseResponse response = new BaseResponse(code.getMsg());
         return new ResponseEntity(response, code.getHttpStatus());
     }
 
+    @ApiOperation(value = "로그아웃")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "로그아웃 성공",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+        @ApiResponse(responseCode = "401", description = "로그아웃 실패 - 존재하지 않는 유저입니다.",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+    })
+    @DeleteMapping("/auth/logout")
+    public ResponseEntity<BaseResponse> logout(){
+        String memberId = SecurityUtil.getCurrentMemberId();
+        userService.logout(memberId);
+
+        SuccessCode code = SuccessCode.LOGOUT_SUCCESS;
+        BaseResponse response = new BaseResponse(code.getMsg());
+        return new ResponseEntity(response, code.getHttpStatus());
+    }
 
 
 }

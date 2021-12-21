@@ -10,4 +10,6 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     List<Group> findByUser(User user); // 그룹 리스트 조회
     List<Group> findByNameAndUser(String groupName, User user); // 그룹 중복 검사
 
+    void deleteAllByUserId(String userId); // 유저가 추가한 모든 그룹 삭제
+
 }

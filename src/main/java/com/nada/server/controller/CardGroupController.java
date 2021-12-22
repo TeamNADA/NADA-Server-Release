@@ -114,7 +114,7 @@ public class CardGroupController {
         @RequestParam(value = "offset", defaultValue = "0", required = false) Integer offset
     ){
 
-        List<CardFrontDTO> cards = cardGroupService.findCardsByGroup(groupId, offset, 1).stream()
+        List<CardFrontDTO> cards = cardGroupService.findCardsByGroup(groupId, offset, 6).stream()
             .map(card -> new CardFrontDTO(card.getId(), card.getBackground(), card.getTitle(),
                 card.getName(),
                 card.getBirthDate(), card.getMbti(), card.getInstagram(),

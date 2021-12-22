@@ -143,7 +143,7 @@ public class CardController {
         WrittenCardResponse response;
 
         if(!list){
-            findCards = cardService.findCards(userId, offset, 1);
+            findCards = cardService.findCards(userId, offset, 3);
             List<CardDTO> cards = findCards.stream()
                 .map(card -> new CardDTO(card.getId(), card.getBackground(), card.getTitle(),
                     card.getName(), card.getBirthDate(), card.getMbti(), card.getInstagram(),

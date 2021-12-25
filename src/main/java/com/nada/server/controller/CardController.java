@@ -145,7 +145,7 @@ public class CardController {
         if(!list){
             findCards = cardService.findCards(userId, offset, 1);
             List<CardDTO> cards = findCards.stream()
-                .map(card -> new CardDTO(card.getId(), card.getBackground(), card.getTitle(),
+                .map(card -> new CardDTO(card.getId(), card.getUser().getId(), card.getBackground(), card.getTitle(),
                     card.getName(), card.getBirthDate(), card.getMbti(), card.getInstagram(),
                     card.getLink(), card.getDescription(), card.getIsMincho(), card.getIsSoju(),
                     card.getIsBoomuk(), card.getIsSauced(), card.getOneTmi(), card.getTwoTmi(), card.getThreeTmi()))
@@ -191,7 +191,7 @@ public class CardController {
     public ResponseEntity<CardDetailResponse> getCardDetail(@PathVariable("card-id") String cardId){
         Card findCard = cardService.findOne(cardId);
 
-        CardDTO card = new CardDTO(findCard.getId(), findCard.getBackground(), findCard.getTitle(),
+        CardDTO card = new CardDTO(findCard.getId(), findCard.getUser().getId(), findCard.getBackground(), findCard.getTitle(),
             findCard.getName(), findCard.getBirthDate(), findCard.getMbti(), findCard.getInstagram(),
             findCard.getLink(), findCard.getDescription(), findCard.getIsMincho(), findCard.getIsSoju(),
             findCard.getIsBoomuk(), findCard.getIsSauced(), findCard.getOneTmi(), findCard.getTwoTmi(), findCard.getThreeTmi());

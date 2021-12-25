@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 public class CardDTO {
     private String cardId;
+    private String author;
     private String background;
     private String title;
     private String name;
@@ -25,11 +26,12 @@ public class CardDTO {
     private String twoTmi;
     private String threeTmi;
 
-    public CardDTO(String cardId, String background, String title, String name,
+    public CardDTO(String cardId, String author, String background, String title, String name,
         String birthDate, String mbti, String instagram, String link, String description,
         Boolean isMincho, Boolean isSoju, Boolean isBoomuk, Boolean isSauced, String oneTmi,
         String twoTmi, String threeTmi) {
         this.cardId = cardId;
+        this.author = author;
         this.background = background;
         this.title = title;
         this.name = name;

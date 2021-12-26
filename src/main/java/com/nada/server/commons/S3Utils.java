@@ -40,6 +40,7 @@ public class S3Utils {
 
     public void deleteBackground(String url){
         String key = url.split("https://nada-server.s3.ap-northeast-2.amazonaws.com/")[1];
+        if(key.contains("default/")) return;
         DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, key);
         amazonS3Client.deleteObject(deleteObjectRequest);
     }

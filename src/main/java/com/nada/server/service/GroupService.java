@@ -4,6 +4,7 @@ import com.nada.server.constants.ErrorCode;
 import com.nada.server.domain.Group;
 import com.nada.server.domain.User;
 import com.nada.server.exception.CustomException;
+import com.nada.server.repository.CardGroupRepository;
 import com.nada.server.repository.GroupRepository;
 import com.nada.server.repository.UserRepository;
 import java.util.List;
@@ -18,6 +19,7 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final CardGroupRepository cardGroupRepository;
 
     /**
      * 그룹 추가
@@ -49,11 +51,12 @@ public class GroupService {
      * 미분류 그룹 삭제 불가
      */
     @Transactional
-    public void delete(Long groupId){
+    public void delete(Long groupId, Long defaultGroupId){
         Group findGroup = groupRepository.findById(groupId)
             .orElseThrow(() -> new CustomException(ErrorCode.INVALID_GROUP_ID));
 
         if(findGroup.getName() == "미분류") throw new CustomException(ErrorCode.CANNOT_DELETE_DEFAULT_GROUP);
+        cardGroupRepository.moveToDefaultGroup(defaultGroupId, groupId);
         groupRepository.deleteById(groupId);
     }
 

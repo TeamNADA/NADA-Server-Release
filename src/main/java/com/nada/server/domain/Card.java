@@ -73,7 +73,7 @@ public class Card implements Persistable<String> {
 
         // card Id 랜덤 UUID 이용한 랜덤생성
         String cardId = UUID.randomUUID().toString().replaceAll("-", ""); // -를 제거해 주었다.
-        cardId = cardId.substring(0, 10).toUpperCase();
+        cardId = cardId.substring(0, 6).toUpperCase();
         card.setId(cardId);
         card.setBackground(background);
         card.setBirthDate(birthDate);

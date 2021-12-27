@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,6 +48,9 @@ public class CardController {
     private final CardService cardService;
     private final S3Utils s3Utils;
 
+    @Value("${default.background}")
+    private String defaultBackgroud;
+
     @ApiOperation(value = "카드 생성")
     @PostMapping("/card")
     @ApiResponses({
@@ -66,7 +70,7 @@ public class CardController {
             imageURL = s3Utils.upload(card.getImage());
         }else{
             // 지정 이미지
-            imageURL = "Default IMAGE~";
+            imageURL = defaultBackgroud+isDefault+".png";
         }
 
         Card newCard = Card.createCard(imageURL, cardData.getBirthDate(), cardData.getTitle(),

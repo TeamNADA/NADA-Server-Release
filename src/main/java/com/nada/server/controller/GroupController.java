@@ -70,8 +70,9 @@ public class GroupController {
         @ApiResponse(responseCode = "406", description = "미분류 그룹 삭제 불가",
             content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
-    public ResponseEntity<BaseResponse> deleteGroup(@PathVariable("group-id") Long groupId) {
-        groupService.delete(groupId);
+    public ResponseEntity<BaseResponse> deleteGroup(@PathVariable("group-id") Long groupId,
+        @RequestParam("defaultGroupId") Long defaultGroupId) {
+        groupService.delete(groupId, defaultGroupId);
         SuccessCode code = SuccessCode.DELETE_GROUP_SUCCESS;
         BaseResponse response = new BaseResponse(code.getMsg());
         return new ResponseEntity(response, code.getHttpStatus());

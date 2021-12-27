@@ -33,11 +33,12 @@ public class CardService {
     public String create(Card card, String userId){
         User user = userRepository.findById(userId).get();
 
-        Integer maxPriority = cardRepository.maxPriority();
-        if(maxPriority == null){
+        Integer minPriority = cardRepository.minPriority(userId);
+        if(minPriority == null){
             card.setPriority(Integer.valueOf(0));
         }else{
-            card.setPriority(maxPriority+1);
+            cardRepository.updatePriority(minPriority);
+            card.setPriority(minPriority+1);
         }
         card.setUser(user);
 

@@ -18,4 +18,6 @@ public interface CardGroupRepository extends JpaRepository<CardGroup, Long> {
     @Modifying
     @Query("UPDATE CardGroup c SET c.group.id=:defaultGroupId WHERE c.group.id=:groupId")
     void moveToDefaultGroup(@Param("defaultGroupId") Long defaultGroupId, @Param("groupId") Long groupId);
+
+    void deleteByUser(User user);
 }

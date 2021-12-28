@@ -9,6 +9,7 @@ import com.nada.server.dto.payload.TokenDTO;
 import com.nada.server.exception.CustomException;
 import com.nada.server.constants.ErrorCode;
 import com.nada.server.jwt.TokenProvider;
+import com.nada.server.repository.CardGroupRepository;
 import com.nada.server.repository.GroupRepository;
 import com.nada.server.repository.UserRepository;
 import java.util.Optional;
@@ -31,6 +32,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final CardGroupRepository cardGroupRepository;
     private final RedisUtil redisUtil;
 
     /**
@@ -83,9 +85,11 @@ public class UserService {
      */
     @Transactional
     public void unsubscribe(String id){
-       userRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_USER));
-       userRepository.deleteById(id);
-       redisUtil.deleteData(id);
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_USER));
+        cardGroupRepository.deleteByUser(user);
+        userRepository.deleteById(id);
+        redisUtil.deleteData(id);
     }
 
     /**

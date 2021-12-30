@@ -130,7 +130,7 @@ public class CardGroupService {
             () -> new CustomException(ErrorCode.INVALID_GROUP_ID)
         );;
 
-        Pageable paging = PageRequest.of(offset, size, Sort.by("createDate").descending());
+        Pageable paging = PageRequest.of(offset, size, Sort.by("create_date").descending());
         return cardGroupSupportRepository.findCardsByGroup(findGroup, paging);
     }
 

@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     /* 400 - 잘못된 요청 */
-    CANNOT_ADD_MY_CARD(BAD_REQUEST, "내가 작성한 명함는 추가할 수 없습니다."),
+    CANNOT_ADD_MY_CARD(BAD_REQUEST, "내가 작성한 명함은 추가할 수 없습니다."),
     NOT_MY_GROUP(BAD_REQUEST, "내가 추가한 그룹이 아닙니다."),
     /* 401 - 인증 실패 */
     // token 관련

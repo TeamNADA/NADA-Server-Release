@@ -15,7 +15,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter @Setter
-public class CardGroup {
+public class CardGroup extends BaseTimeEntity{
 
     @Id @GeneratedValue
     @Column(name = "card_group_id")

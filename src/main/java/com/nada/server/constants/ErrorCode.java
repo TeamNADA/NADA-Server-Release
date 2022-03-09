@@ -13,6 +13,10 @@ public enum ErrorCode {
     /* 400 - 잘못된 요청 */
     CANNOT_ADD_MY_CARD(BAD_REQUEST, "내가 작성한 명함은 추가할 수 없습니다."),
     NOT_MY_GROUP(BAD_REQUEST, "내가 추가한 그룹이 아닙니다."),
+    // 로그인 관련
+    UNAUTHORIZED_USER(BAD_REQUEST, "등록된 유저 정보가 없습니다."),
+    UNAUTHORIZED_TOKEN(BAD_REQUEST, "토큰을 함께 보내주세요."),
+
     /* 401 - 인증 실패 */
     // token 관련
     /* 401 - 인증 실패 */
@@ -27,10 +31,6 @@ public enum ErrorCode {
     INVALID_REFRESH_TOKEN(UNAUTHORIZED, "권한 정보가 없는(잘못된) 리프레시 토큰입니다"),
     EXPIRED_REFRESH_TOKEN(UNAUTHORIZED, "리프레시 토큰이 만료되었습니다."),
     LOGOUT_USER(UNAUTHORIZED, "로그아웃된 유저입니다."),
-
-    // 로그인 관련
-    UNAUTHORIZED_USER(UNAUTHORIZED, "등록된 유저 정보가 없습니다."),
-    UNAUTHORIZED_TOKEN(UNAUTHORIZED, "토큰을 함께 보내주세요."),
 
     /* 403 - forbidden, 접근권한 존재하지 않음 */
     FORBIDDEN_ACCESS(FORBIDDEN, "해당 요청에 접근할 권한이 아닙니다."),
